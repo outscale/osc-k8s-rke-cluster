@@ -1,0 +1,33 @@
+---
+- name: Setup bastion
+  hosts: bastion
+  tasks:
+    - name: Install software
+      become: yes
+      apt:
+        update_cache: yes
+        name:
+          #- socat # for kubectl port-forward
+          #- conntrack
+          #- ipset
+          - docker.io
+    - name: download kubectl
+      become: yes
+      get_url:
+        url: "https://dl.k8s.io/release/v1.21.6/bin/linux/amd64/kubectl"
+        dest: /usr/local/bin/kubectl
+        mode: 'a+rx'
+    - name: create .kube folder
+      file:
+        path: /home/outscale/.kube
+        state: directory
+        mode: '0755'
+    - name: Disable swap
+      become: yes
+      command: swapoff -a
+    - name: Add outscale user to docker group
+      become: yes
+      user:
+        name: outscale
+        groups: docker
+        append: yes

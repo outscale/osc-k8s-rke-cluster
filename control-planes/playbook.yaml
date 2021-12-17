@@ -1,0 +1,19 @@
+---
+- name: Setup control-planes
+  hosts: control_planes
+  tasks:
+    - name: Install software
+      become: yes
+      apt:
+        update_cache: yes
+        name:
+          - docker.io
+    - name: Disable swap
+      become: yes
+      command: swapoff -a
+    - name: Add outscale user to docker group
+      become: yes
+      user:
+        name: outscale
+        groups: docker
+        append: yes

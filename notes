@@ -1,0 +1,8 @@
+todo:
+- ccm
+  - routes
+  - labels
+- csi
+- proper sg
+- root device with some iops
+- use packer for node image
