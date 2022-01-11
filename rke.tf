@@ -11,7 +11,7 @@ resource "local_file" "rke_cluster_yaml" {
   role:
   - controlplane
   - etcd
-  hostname_override:
+  hostname_override: ip-10-0-1-%d.eu-west-2.compute.internal
   user: outscale
   docker_socket: /var/run/docker.sock
   ssh_key:
@@ -21,7 +21,7 @@ resource "local_file" "rke_cluster_yaml" {
   labels: {}
   taints: []
 EOT
-    , 10 + i, 10 + i, i)]),
+    , 10 + i, 10 + i, 10 + i, i)]),
     join("\n", [for i in range(var.worker_count) : format(
       <<EOT
 - address: 10.0.2.%d
@@ -29,7 +29,7 @@ EOT
   internal_address: 10.0.2.%d
   role:
   - worker
-  hostname_override:
+  hostname_override: ip-10-0-2-%d.eu-west-2.compute.internal
   user: outscale
   docker_socket: /var/run/docker.sock
   ssh_key:
@@ -39,7 +39,7 @@ EOT
   labels: {}
   taints: []
 EOT
-    , 10 + i, 10 + i, i)]),
+    , 10 + i, 10 + i, 10 + i, i)]),
 
     <<EOT
 services:
@@ -205,15 +205,6 @@ cloud_provider:
 prefix_path:
 win_prefix_path:
 addon_job_timeout: 0
-bastion_host:
-  address:
-  port:
-  user:
-  ssh_key:
-  ssh_key_path:
-  ssh_cert:
-  ssh_cert_path:
-  ignore_proxy_env_vars: false
 monitoring:
   provider:
   options: {}
@@ -227,7 +218,6 @@ restore:
   snapshot_name:
 rotate_encryption_key: false
 dns: null
-cluster_name: phandalin
 bastion_host:
   address: ${outscale_public_ip.bastion.public_ip}
   port: 22
