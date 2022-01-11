@@ -25,6 +25,13 @@ resource "outscale_route" "worker-pods" {
   route_table_id       = outscale_route_table.workers.route_table_id
 }
 
+resource "outscale_route" "worker-services" {
+  count                = var.worker_count
+  destination_ip_range = "10.43.${count.index}.0/24"
+  vm_id                = outscale_vm.workers[count.index].vm_id
+  route_table_id       = outscale_route_table.workers.route_table_id
+}
+
 resource "outscale_route_table_link" "workers" {
   subnet_id      = outscale_subnet.workers.subnet_id
   route_table_id = outscale_route_table.workers.route_table_id
