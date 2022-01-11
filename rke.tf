@@ -1,4 +1,4 @@
-resource "local_file" "rke_cluster_yaml" {
+resource "local_file" "rke_cluster_yml" {
   filename        = "${path.root}/rke/cluster.yml"
   file_permission = "0660"
   content = format("%s%s%s%s",
@@ -129,7 +129,7 @@ authentication:
   sans: []
   webhook: null
 addons:
-addons_include: 
+addons_include:
   - "${path.root}/cloud-provider-osc/secrets.yaml"
   - "https://raw.githubusercontent.com/outscale-dev/cloud-provider-osc/v0.0.9beta/deploy/osc-ccm-manifest.yml"
 system_images:
