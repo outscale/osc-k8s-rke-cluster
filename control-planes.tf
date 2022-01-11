@@ -1,5 +1,5 @@
 locals {
-  control_names = [for i in range(var.control_plane_count) : format("ip-10-0-1-%d.eu-west-2.compute.internal", 10 + i)]
+  control_plane_names = [for i in range(var.control_plane_count) : format("ip-10-0-1-%d.eu-west-2.compute.internal", 10 + i)]
 }
 
 resource "outscale_subnet" "control-planes" {
@@ -127,6 +127,6 @@ resource "outscale_vm" "control-planes" {
   #}
   tags {
     key   = "OscK8sNodeName"
-    value = local.control_names[count.index]
+    value = local.control_plane_names[count.index]
   }
 }
