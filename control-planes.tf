@@ -1,21 +1,17 @@
+locals {
+  control_names = [for i in range(var.control_plane_count) : format("ip-10-0-1-%d.eu-west-2.compute.internal", 10 + i)]
+}
+
 resource "outscale_subnet" "control-planes" {
   net_id         = outscale_net.net.net_id
   ip_range       = "10.0.1.0/24"
   subregion_name = "${var.region}a"
 
-  tags {
-    key   = "OscK8sClusterID/${var.cluster_name}"
-    value = "owned"
-  }
 }
 
 resource "outscale_route_table" "control-planes" {
   net_id = outscale_net.net.net_id
 
-  tags {
-    key   = "OscK8sClusterID/${var.cluster_name}"
-    value = "owned"
-  }
 }
 
 resource "outscale_route" "control-planes-default" {
@@ -121,5 +117,16 @@ resource "outscale_vm" "control-planes" {
   tags {
     key   = "name"
     value = "${var.cluster_name}-control-plane-${count.index}"
+  }
+
+  # A bug in metadata make cloud-init crash
+  # this tag is only needed for CCM
+  #tags {
+  #  key   = "OscK8sClusterID/${var.cluster_name}"
+  #  value = "owned"
+  #}
+  tags {
+    key   = "OscK8sNodeName"
+    value = local.control_names[count.index]
   }
 }

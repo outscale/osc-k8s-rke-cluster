@@ -2,10 +2,20 @@ resource "outscale_subnet" "bastion" {
   net_id         = outscale_net.net.net_id
   ip_range       = "10.0.0.0/24"
   subregion_name = "${var.region}a"
+
+  tags {
+    key   = "OscK8sClusterID/${var.cluster_name}"
+    value = "owned"
+  }
 }
 
 resource "outscale_route_table" "bastion" {
   net_id = outscale_net.net.net_id
+
+  tags {
+    key   = "OscK8sClusterID/${var.cluster_name}"
+    value = "owned"
+  }
 }
 
 resource "outscale_route" "bastion-default" {
