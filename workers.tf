@@ -20,7 +20,7 @@ resource "outscale_route" "workers-default" {
 
 resource "outscale_route" "worker-pods" {
   count                = var.worker_count
-  destination_ip_range = "10.200.${count.index}.0/24"
+  destination_ip_range = "10.42.${count.index}.0/24"
   vm_id                = outscale_vm.workers[count.index].vm_id
   route_table_id       = outscale_route_table.workers.route_table_id
 }
