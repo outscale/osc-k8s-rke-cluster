@@ -1,0 +1,8 @@
+---
+- name: Destroy 2048 example service
+  hosts: bastion
+  tasks:
+    - name: Destroy 2048 service
+      command:
+        cmd: "kubectl delete -f -"
+        stdin: "{{ lookup('file', '2048.yaml') }}"
