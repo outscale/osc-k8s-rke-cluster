@@ -129,7 +129,9 @@ authentication:
   sans: []
   webhook: null
 addons:
-addons_include: []
+addons_include: 
+  - "${path.root}/cloud-provider-osc/secrets.yaml"
+  - "https://raw.githubusercontent.com/outscale-dev/cloud-provider-osc/v0.0.9beta/deploy/osc-ccm-manifest.yml"
 system_images:
   etcd: rancher/mirrored-coreos-etcd:v3.4.16-rancher1
   alpine: rancher/rke-tools:v0.1.78
@@ -201,7 +203,7 @@ ingress:
   nginx_ingress_controller_priority_class_name:
 cluster_name: ${var.cluster_name}
 cloud_provider:
-  name:
+  name: "external"
 prefix_path:
 win_prefix_path:
 addon_job_timeout: 0
@@ -225,4 +227,5 @@ bastion_host:
   ssh_key_path: ${path.root}/bastion/bastion.pem
 EOT
   )
+  depends_on = [local_file.cloud-provider-osc_secrets]
 }
