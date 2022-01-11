@@ -7,7 +7,6 @@ resource "local_file" "rke_cluster_yml" {
       <<EOT
 - address: 10.0.1.%d
   port: 22
-  internal_address: 10.0.1.%d
   role:
   - controlplane
   - etcd
@@ -21,12 +20,11 @@ resource "local_file" "rke_cluster_yml" {
   labels: {}
   taints: []
 EOT
-    , 10 + i, 10 + i, 10 + i, i)]),
+    , 10 + i, 10 + i, i)]),
     join("\n", [for i in range(var.worker_count) : format(
       <<EOT
 - address: 10.0.2.%d
   port: 22
-  internal_address: 10.0.2.%d
   role:
   - worker
   hostname_override: ip-10-0-2-%d.eu-west-2.compute.internal
@@ -39,7 +37,7 @@ EOT
   labels: {}
   taints: []
 EOT
-    , 10 + i, 10 + i, 10 + i, i)]),
+    , 10 + i, 10 + i, i)]),
 
     <<EOT
 services:
