@@ -58,10 +58,6 @@ resource "outscale_keypair" "workers" {
 resource "outscale_security_group" "worker" {
   description = "Kubernetes workers (${var.cluster_name})"
   net_id      = outscale_net.net.net_id
-  tags {
-    key   = "OscK8sClusterID/${var.cluster_name}"
-    value = "owned"
-  }
 }
 
 resource "outscale_security_group_rule" "worker-rules" {
@@ -84,7 +80,7 @@ resource "outscale_vm" "workers" {
   image_id           = outscale_image.node.image_id
   vm_type            = var.worker_vm_type
   keypair_name       = outscale_keypair.workers[count.index].keypair_name
-  security_group_ids = [outscale_security_group.worker.security_group_id]
+  security_group_ids = [outscale_security_group.worker.security_group_id, outscale_security_group.node.security_group_id]
   subnet_id          = outscale_subnet.workers.subnet_id
   private_ips        = [format("10.0.2.%d", 10 + count.index)]
 

@@ -88,7 +88,7 @@ resource "outscale_vm" "control-planes" {
   image_id           = outscale_image.node.image_id
   vm_type            = var.control_plane_vm_type
   keypair_name       = outscale_keypair.control-planes[count.index].keypair_name
-  security_group_ids = [outscale_security_group.control-plane.security_group_id]
+  security_group_ids = [outscale_security_group.control-plane.security_group_id, outscale_security_group.node.security_group_id]
   subnet_id          = outscale_subnet.control-planes.subnet_id
   private_ips        = [format("10.0.1.%d", 10 + count.index)]
 
