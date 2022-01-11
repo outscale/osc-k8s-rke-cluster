@@ -119,14 +119,17 @@ resource "outscale_vm" "control-planes" {
     value = "${var.cluster_name}-control-plane-${count.index}"
   }
 
-  # A bug in metadata make cloud-init crash
-  # this tag is only needed for CCM
-  #tags {
-  #  key   = "OscK8sClusterID/${var.cluster_name}"
-  #  value = "owned"
-  #}
   tags {
     key   = "OscK8sNodeName"
     value = local.control_plane_names[count.index]
+  }
+}
+
+resource "outscale_tag" "control-planes-k8s-cluster-name" {
+  count        = var.control_plane_count
+  resource_ids = [outscale_vm.control-planes[count.index].vm_id]
+  tag {
+    key   = "OscK8sClusterID/${var.cluster_name}"
+    value = "owned"
   }
 }

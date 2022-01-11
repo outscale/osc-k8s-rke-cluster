@@ -116,8 +116,9 @@ resource "outscale_vm" "workers" {
 
 # A bug in metadata make cloud-init crash with a tag containing a / so we apply it after VM finished starting.
 # This tag is needed for CCM
-resource "outscale_tag" "worker-k8s-names" {
-  resource_ids = [for vm in range(var.worker_count) : outscale_vm.workers[vm].vm_id]
+resource "outscale_tag" "workers-k8s-cluster-name" {
+  count        = var.worker_count
+  resource_ids = [outscale_vm.workers[count.index].vm_id]
   tag {
     key   = "OscK8sClusterID/${var.cluster_name}"
     value = "owned"
