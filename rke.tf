@@ -10,6 +10,7 @@ resource "local_file" "rke_cluster_yml" {
   role:
   - controlplane
   - etcd
+  - worker
   hostname_override: ip-10-0-1-%d.eu-west-2.compute.internal
   user: outscale
   docker_socket: /var/run/docker.sock

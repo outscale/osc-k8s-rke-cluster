@@ -1,4 +1,4 @@
-# Kubernetes with RKE
+# Kubernetes Cluster With RKE On Outscale Cloud
 
 This reprository contain a way to deploy a [kubernetes](https://kubernetes.io/) cluster using [rke](https://rancher.com/docs/rke/) on [Outscale cloud provider](https://outscale.com/).
 
