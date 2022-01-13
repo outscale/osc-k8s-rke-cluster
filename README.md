@@ -57,11 +57,22 @@ ssh -F ssh_config worker-0
 ssh -F ssh_config control-plane-0
 ```
 
-# Smoke Test
+# Testing
 
+## Smoke tests
 Smoke testing our newly created Kubernetes cluster can be done very similarely to [kubernetes-the-hard-way](https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/13-smoke-test.md).
 
 Note that workers has no public IP so you can test Nodeport service from bastion.
+
+## CCM quicktest
+
+You can test the CCM by creating a LoadBalancer Service:
+```
+scp -F ssh_config examples/2048.yaml bastion:./
+ssh -F ssh_config bastion
+kubectl apply -f 2048.yaml
+kubectl get svc -n 2048
+```
 
 # Cleaning Up
 
