@@ -2,29 +2,6 @@ locals {
   control_plane_names = [for i in range(var.control_plane_count) : format("ip-10-0-1-%d.eu-west-2.compute.internal", 10 + i)]
 }
 
-resource "outscale_subnet" "control-planes" {
-  net_id         = outscale_net.net.net_id
-  ip_range       = "10.0.1.0/24"
-  subregion_name = "${var.region}a"
-
-}
-
-resource "outscale_route_table" "control-planes" {
-  net_id = outscale_net.net.net_id
-
-}
-
-resource "outscale_route" "control-planes-default" {
-  destination_ip_range = "0.0.0.0/0"
-  nat_service_id       = outscale_nat_service.nat.nat_service_id
-  route_table_id       = outscale_route_table.control-planes.route_table_id
-}
-
-resource "outscale_route_table_link" "control-planes" {
-  subnet_id      = outscale_subnet.control-planes.subnet_id
-  route_table_id = outscale_route_table.control-planes.route_table_id
-}
-
 resource "tls_private_key" "control-planes" {
   count     = var.control_plane_count
   algorithm = "RSA"
@@ -88,8 +65,8 @@ resource "outscale_vm" "control-planes" {
   image_id           = outscale_image.node.image_id
   vm_type            = var.control_plane_vm_type
   keypair_name       = outscale_keypair.control-planes[count.index].keypair_name
-  security_group_ids = [outscale_security_group.control-plane.security_group_id, outscale_security_group.node.security_group_id]
-  subnet_id          = outscale_subnet.control-planes.subnet_id
+  security_group_ids = [outscale_security_group.control-plane.security_group_id, outscale_security_group.node.security_group_id, outscale_security_group.worker.security_group_id]
+  subnet_id          = outscale_subnet.nodes.subnet_id
   private_ips        = [format("10.0.1.%d", 10 + count.index)]
 
   provisioner "remote-exec" {
