@@ -1,0 +1,11 @@
+---
+- name: Setup OSC-CSI
+  hosts: bastion
+  tasks:
+    - name: Upload osc-csi helm package
+      copy:
+        src: ./osc-bsu-csi-driver-0.6.0.tgz
+        dest: /tmp
+        mode: '0755'
+    - name: Install osc-csi
+      command: helm install osc-bsu-csi-driver /tmp/osc-bsu-csi-driver-0.6.0.tgz --namespace kube-system --set enableVolumeScheduling=true --set enableVolumeResizing=true --set enableVolumeSnapshot=true --set region=$OSC_REGION --set image.repository=outscale/osc-ebs-csi-driver --set image.tag=v0.0.14beta

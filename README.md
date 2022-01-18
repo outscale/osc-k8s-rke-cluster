@@ -45,6 +45,11 @@ You can now copy your kubeconfig file to bastion host:
 scp -F ssh_config rke/kube_config_cluster.yml bastion:.kube/config
 ```
 
+Then to complete the cluster initialization, install the CSI driver
+```
+ANSIBLE_CONFIG=ansible.cfg ansible-playbook osc-csi/playbook.yaml
+```
+
 Connect to bastion and test kubeapi-server:
 ```
 ssh -F ssh_config bastion
