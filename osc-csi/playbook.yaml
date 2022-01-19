@@ -1,6 +1,8 @@
 ---
 - name: Setup OSC-CSI
   hosts: bastion
+  vars_files:
+    - "./external_vars.yml"
   tasks:
     - name: download helm
       become: yes

@@ -12,3 +12,13 @@ stringData:
   secret_key: ${var.secret_key_id}
 EOF
 }
+
+resource "local_file" "osc-csi_external-vars" {
+  filename        = "${path.root}/osc-csi/external_vars.yml"
+  file_permission = "0660"
+  content         = <<-EOF
+{
+  "region": "${var.region}"
+}
+EOF
+}
