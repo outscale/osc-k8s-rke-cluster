@@ -2,7 +2,7 @@
 - name: Setup OSC-CSI
   hosts: bastion
   vars_files:
-    - "./external_vars.yml"
+    - "./ansible-vars.yaml"
   tasks:
     - name: download helm
       become: yes

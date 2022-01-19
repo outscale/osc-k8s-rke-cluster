@@ -13,8 +13,8 @@ stringData:
 EOF
 }
 
-resource "local_file" "osc-csi_external-vars" {
-  filename        = "${path.root}/osc-csi/external_vars.yml"
+resource "local_file" "osc-csi_ansible-vars" {
+  filename        = "${path.root}/osc-csi/ansible-vars.yaml"
   file_permission = "0660"
   content         = <<-EOF
 {
