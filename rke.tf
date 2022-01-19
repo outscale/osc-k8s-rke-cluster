@@ -11,7 +11,7 @@ resource "local_file" "rke_cluster_yml" {
   - controlplane
   - etcd
   - worker
-  hostname_override: ip-10-0-1-%d.eu-west-2.compute.internal
+  hostname_override: ip-10-0-1-%d.%s.compute.internal
   user: outscale
   docker_socket: /var/run/docker.sock
   ssh_key:
@@ -21,14 +21,14 @@ resource "local_file" "rke_cluster_yml" {
   labels: {}
   taints: []
 EOT
-    , 10 + i, 10 + i, i)]),
+    , 10 + i, 10 + i, var.region, i)]),
     join("\n", [for i in range(var.worker_count) : format(
       <<EOT
 - address: 10.0.1.%d
   port: 22
   role:
   - worker
-  hostname_override: ip-10-0-1-%d.eu-west-2.compute.internal
+  hostname_override: ip-10-0-1-%d.%s.compute.internal
   user: outscale
   docker_socket: /var/run/docker.sock
   ssh_key:
@@ -38,7 +38,7 @@ EOT
   labels: {}
   taints: []
 EOT
-    , 19 + i, 19 + i, i)]),
+    , 19 + i, 19 + i, var.region, i)]),
 
     <<EOT
 services:

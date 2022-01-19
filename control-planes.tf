@@ -1,5 +1,5 @@
 locals {
-  control_plane_names = [for i in range(var.control_plane_count) : format("ip-10-0-1-%d.eu-west-2.compute.internal", 10 + i)]
+  control_plane_names = [for i in range(var.control_plane_count) : format("ip-10-0-1-%d.%s.compute.internal", 10 + i, var.region)]
 }
 
 resource "tls_private_key" "control-planes" {

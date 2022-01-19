@@ -1,5 +1,5 @@
 locals {
-  node_names = [for i in range(var.worker_count) : format("ip-10-0-1-%d.eu-west-2.compute.internal", 19 + i)]
+  node_names = [for i in range(var.worker_count) : format("ip-10-0-1-%d.%s.compute.internal", 19 + i, var.region)]
 }
 
 resource "tls_private_key" "workers" {
