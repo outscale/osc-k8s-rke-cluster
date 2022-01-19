@@ -45,6 +45,8 @@ ssh -F ssh_config bastion
 kubectl get nodes
 ```
 
+For further testing, check [testing section](testing.md).
+
 If needed, you can connect to any worker or control-plane node:
 ```
 ssh -F ssh_config worker-0

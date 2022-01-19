@@ -40,3 +40,14 @@ sonobuoy run --wait
 results=$(sonobuoy retrieve)
 sonobuoy results $results
 ```
+
+To get more details about failed tests:
+```
+outfile=$(sonobuoy retrieve)
+sonobuoy results --mode detailed --plugin e2e $outfile |  jq '.  | select(.status == "failed") | .details'
+```
+
+In order to re-run a specific test:
+```
+sonobuoy run --e2e-focus "your test name regex"
+```
