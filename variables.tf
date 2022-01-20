@@ -8,3 +8,4 @@ variable "worker_vm_type" {}
 variable "worker_count" {}
 variable "bastion_vm_type" {}
 variable "cluster_name" {}
+variable "kubernetes_version" {}

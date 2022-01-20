@@ -140,48 +140,6 @@ addons_include:
   - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-5.0/client/config/crd/snapshot.storage.k8s.io_volumesnapshots.yaml
   - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-5.0/deploy/kubernetes/snapshot-controller/rbac-snapshot-controller.yaml
   - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-5.0/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml
-system_images:
-  etcd: rancher/mirrored-coreos-etcd:v3.4.16-rancher1
-  alpine: rancher/rke-tools:v0.1.78
-  nginx_proxy: rancher/rke-tools:v0.1.78
-  cert_downloader: rancher/rke-tools:v0.1.78
-  kubernetes_services_sidecar: rancher/rke-tools:v0.1.78
-  kubedns: rancher/mirrored-k8s-dns-kube-dns:1.17.4
-  dnsmasq: rancher/mirrored-k8s-dns-dnsmasq-nanny:1.17.4
-  kubedns_sidecar: rancher/mirrored-k8s-dns-sidecar:1.17.4
-  kubedns_autoscaler: rancher/mirrored-cluster-proportional-autoscaler:1.8.3
-  coredns: rancher/mirrored-coredns-coredns:1.8.4
-  coredns_autoscaler: rancher/mirrored-cluster-proportional-autoscaler:1.8.3
-  nodelocal: rancher/mirrored-k8s-dns-node-cache:1.18.0
-  kubernetes: rancher/hyperkube:v1.21.6-rancher1
-  flannel: rancher/mirrored-coreos-flannel:v0.14.0
-  flannel_cni: rancher/flannel-cni:v0.3.0-rancher6
-  calico_node: rancher/mirrored-calico-node:v3.19.2
-  calico_cni: rancher/mirrored-calico-cni:v3.19.2
-  calico_controllers: rancher/mirrored-calico-kube-controllers:v3.19.2
-  calico_ctl: rancher/mirrored-calico-ctl:v3.19.2
-  calico_flexvol: rancher/mirrored-calico-pod2daemon-flexvol:v3.19.2
-  canal_node: rancher/mirrored-calico-node:v3.19.2
-  canal_cni: rancher/mirrored-calico-cni:v3.19.2
-  canal_controllers: rancher/mirrored-calico-kube-controllers:v3.19.2
-  canal_flannel: rancher/mirrored-coreos-flannel:v0.14.0
-  canal_flexvol: rancher/mirrored-calico-pod2daemon-flexvol:v3.19.2
-  weave_node: weaveworks/weave-kube:2.8.1
-  weave_cni: weaveworks/weave-npc:2.8.1
-  pod_infra_container: rancher/mirrored-pause:3.4.1
-  ingress: rancher/nginx-ingress-controller:nginx-0.49.3-rancher1
-  ingress_backend: rancher/mirrored-nginx-ingress-controller-defaultbackend:1.5-rancher1
-  ingress_webhook: rancher/mirrored-ingress-nginx-kube-webhook-certgen:v1.1.1
-  metrics_server: rancher/mirrored-metrics-server:v0.5.0
-  windows_pod_infra_container: rancher/kubelet-pause:v0.1.6
-  aci_cni_deploy_container: noiro/cnideploy:5.1.1.0.1ae238a
-  aci_host_container: noiro/aci-containers-host:5.1.1.0.1ae238a
-  aci_opflex_container: noiro/opflex:5.1.1.0.1ae238a
-  aci_mcast_container: noiro/opflex:5.1.1.0.1ae238a
-  aci_ovs_container: noiro/openvswitch:5.1.1.0.1ae238a
-  aci_controller_container: noiro/aci-containers-controller:5.1.1.0.1ae238a
-  aci_gbp_server_container: noiro/gbp-server:5.1.1.0.1ae238a
-  aci_opflex_server_container: noiro/opflex-server:5.1.1.0.1ae238a
 ssh_key_path: ~/.ssh/id_rsa
 ssh_cert_path:
 ssh_agent_auth: false
@@ -190,7 +148,7 @@ authorization:
   options: {}
 ignore_docker_version: null
 enable_cri_dockerd: null
-kubernetes_version:
+kubernetes_version: ${var.kubernetes_version}
 private_registries: []
 ingress:
   provider:

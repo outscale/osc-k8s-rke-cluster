@@ -9,3 +9,4 @@ worker_vm_type        = "tinav5.c4r8p1"
 worker_count          = 2
 bastion_vm_type       = "tinav5.c4r8p1"
 cluster_name          = "phandalin"
+kubernetes_version    = "v1.22.5-rancher1-1" # See available version https://github.com/rancher/rke/releases
