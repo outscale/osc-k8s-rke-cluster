@@ -54,8 +54,15 @@ ssh -F ssh_config control-plane-0
 ```
 
 # Cleaning Up
+First destroy your cluster using RKE:
+```
+rke remove --config rke/cluster.yml
+```
 
-Just run `terraform destroy`.
+And then destroy the infrastructure: 
+```
+terraform destroy
+```
 
 Alternatively, you can manually cleanup your resources if something goes wrong:
 - Connect to [cockpit interface](https://cockpit.outscale.com/)
