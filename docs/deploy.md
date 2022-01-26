@@ -53,6 +53,9 @@ ssh -F ssh_config worker-0
 ssh -F ssh_config control-plane-0
 ```
 
+> **_NOTE:_**  A loadbalancer is created to access the cluster from the outside, you have to modify the IP of the server by the LB DNS name in the `rke/kube_config_cluster.yml`
+
+
 # Cleaning Up
 First destroy your cluster using RKE:
 ```

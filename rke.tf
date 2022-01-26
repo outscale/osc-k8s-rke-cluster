@@ -128,7 +128,8 @@ network:
   tolerations: []
 authentication:
   strategy: x509
-  sans: []
+  sans:
+   - ${outscale_load_balancer.lb-kube-apiserver.dns_name}
   webhook: null
 addons:
 addons_include:
