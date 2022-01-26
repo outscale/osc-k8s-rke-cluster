@@ -36,16 +36,26 @@ sudo mv sonobuoy /usr/local/bin/
 Finally, you can run tests and retrieve results:
 
 ```
-sonobuoy run --wait
+sonobuoy run --wait  --e2e-skip "Ingress API should support creating Ingress API operations|ServiceAccountIssuerDiscovery should support OIDC discovery of service account issuer|\[Disruptive\]|NoExecuteTaintManager"
 results=$(sonobuoy retrieve)
 sonobuoy results $results
 ```
+
+> **NOTE**: 
+> 
+> These two first tests are skipped because
+> -  `Ingress API should support creating Ingress API operations`: the ingress controller does not accept duplicate ingress with different namespaces
+> -  `ServiceAccounts ServiceAccountIssuerDiscovery should support OIDC discovery of service account issuer`: the OIDC is not enabled in our cluster
+> 
+> The two last are the default value.
 
 To get more details about failed tests:
 ```
 outfile=$(sonobuoy retrieve)
 sonobuoy results --mode detailed --plugin e2e $outfile |  jq '.  | select(.status == "failed") | .details'
 ```
+
+To get the logs of the e2e, you can find the logs file inside the archive with the path: `plugins/e2e/results/global/e2e.log`.
 
 In order to re-run a specific test:
 ```
