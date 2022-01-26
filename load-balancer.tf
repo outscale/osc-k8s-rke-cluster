@@ -1,11 +1,11 @@
-resource "outscale_security_group" "lb-kube-apiserver-sg" {
+resource "outscale_security_group" "lb-kube-apiserver" {
   description = "Kubernetes LB kube-apiserver (${var.cluster_name})"
   net_id      = outscale_net.net.net_id
 }
 
 resource "outscale_security_group_rule" "kube-apiserver" {
   flow              = "Inbound"
-  security_group_id = outscale_security_group.lb-kube-apiserver-sg.id
+  security_group_id = outscale_security_group.lb-kube-apiserver.id
   rules {
     from_port_range = "6443"
     to_port_range   = "6443"
@@ -17,7 +17,7 @@ resource "outscale_security_group_rule" "kube-apiserver" {
 resource "outscale_load_balancer" "lb-kube-apiserver" {
   load_balancer_name = "${var.cluster_name}-kube-apiserver"
   subnets            = [outscale_subnet.nodes.subnet_id]
-  security_groups = [outscale_security_group.lb-kube-apiserver-sg.security_group_id]
+  security_groups = [outscale_security_group.lb-kube-apiserver.security_group_id]
   listeners {
     backend_port           = 6443
     backend_protocol       = "TCP"
@@ -26,7 +26,7 @@ resource "outscale_load_balancer" "lb-kube-apiserver" {
   }
 }
 
-output "load_balancer_url" {
+output "kube-apiserver-url" {
   value = "https://${outscale_load_balancer.lb-kube-apiserver.dns_name}"
 }
 
@@ -36,7 +36,7 @@ resource "outscale_load_balancer_vms" "backend_vms" {
   backend_vm_ids     = [outscale_vm.control-planes[count.index].vm_id]
 }
 
-resource "outscale_load_balancer_attributes" "my_health_check" {
+resource "outscale_load_balancer_attributes" "lb-kube-apiserver" {
   load_balancer_name = outscale_load_balancer.lb-kube-apiserver.load_balancer_name
   health_check {
     healthy_threshold   = 10
