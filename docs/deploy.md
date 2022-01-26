@@ -1,7 +1,7 @@
 # Prerequisite
 
 - [Terraform](https://www.terraform.io/downloads) (>= 0.14)
-- [RKE](https://rancher.com/docs/rke/latest/en/installation/) (>= v1.3.2)
+- [RKE](https://rancher.com/docs/rke/latest/en/installation/) (>= v1.3.4)
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html) (>= 2.4)
 - [Outscale Access Key and Secret Key](https://wiki.outscale.net/display/EN/Creating+an+Access+Key)
 
