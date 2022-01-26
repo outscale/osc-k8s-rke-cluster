@@ -11,7 +11,8 @@
       command:
         cmd: helm repo add twuni https://helm.twun.io
     - name: Install docker-registry
-      command: helm install docker-registry twuni/docker-registry --set "service.type=NodePort"
+      command:
+        cmd: helm upgrade --install --wait --wait-for-jobs docker-registry twuni/docker-registry --set "service.type=NodePort"
 - name: Retrieve nodeport information
   hosts: bastion
   tasks:
