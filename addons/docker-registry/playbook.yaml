@@ -47,8 +47,9 @@
           set -e
           project_root=$(cd "$(dirname $0)/../.." && pwd)
           cd "$project_root"
-          echo "You can access the Docker registry by using \"localhost:{{ hostvars["bastion"]["nodeport_port"].stdout }}\" from your computer or \"{{hostvars["bastion"]["nodeport_ip"].stdout }}:{{ hostvars["bastion"]["nodeport_port"].stdout }}\" from the cluster.\nPress Ctrl-C to stop port-forwarding."
-          ssh -F ssh_config -L {{ hostvars["bastion"]["nodeport_port"].stdout }}:{{hostvars["bastion"]["nodeport_ip"].stdout }}:{{ hostvars["bastion"]["nodeport_port"].stdout }} -N bastion
+          echo "You can access the Docker registry by using \"localhost:4242\" from your computer or \"{{hostvars["bastion"]["nodeport_ip"].stdout }}:{{ hostvars["bastion"]["nodeport_port"].stdout }}\" from the cluster."
+          echo "Press Ctrl-C to stop port-forwarding."
+          ssh -F ssh_config -L 4242:{{hostvars["bastion"]["nodeport_ip"].stdout }}:{{ hostvars["bastion"]["nodeport_port"].stdout }} -N bastion
         dest: "./start_port_forwarding.sh"
         mode: 0755
     
