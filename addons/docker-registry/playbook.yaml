@@ -1,0 +1,50 @@
+---
+- name: Setup docker registry
+  hosts: bastion
+  tasks:
+    - name: download helm
+      become: yes
+      command: 
+        cmd: /bin/bash -c "wget https://get.helm.sh/helm-v3.8.0-rc.1-linux-amd64.tar.gz && tar -zxvf helm-v3.8.0-rc.1-linux-amd64.tar.gz && mv linux-amd64/helm /usr/local/bin/helm && chmod +x /usr/local/bin/helm"
+        creates: /usr/local/bin/helm
+    - name: Add twun helm repo
+      command:
+        cmd: helm repo add twuni https://helm.twun.io
+    - name: Install docker-registry
+      command: helm install docker-registry twuni/docker-registry --set "service.type=NodePort"
+- name: Retrieve nodeport information
+  hosts: bastion
+  tasks:
+    - name: Add insecure registry
+      command:
+        cmd: kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services docker-registry
+      register: nodeport_port
+    - name: Add insecure registry
+      command:
+        cmd: kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}"
+      register: nodeport_ip
+- name: Setup Docker
+  hosts: bastion, control_planes, workers
+  tasks:
+    - name: Add registry to insecure registry
+      become: yes
+      copy:  
+        content:  '{ "insecure-registries":["{{ hostvars["bastion"]["nodeport_ip"].stdout }}:{{ hostvars["bastion"]["nodeport_port"].stdout }}"] }'
+        dest: "/etc/docker/daemon.json"
+    - name: restart docker
+      become: yes
+      systemd:
+        name: docker
+        state: restarted
+- name: Create tunnel forwarding
+  hosts: localhost
+  tasks:
+    - name: Start 
+      copy:  
+        content: |
+          #!/bin/bash
+          echo "You can access the Docker registry by using \"localhost:{{ hostvars["bastion"]["nodeport_port"].stdout }}\" from your computer and \"{{hostvars["bastion"]["nodeport_ip"].stdout }}:{{ hostvars["bastion"]["nodeport_port"].stdout }}\" from the cluster"
+          ssh -F ../../ssh_config -L {{ hostvars["bastion"]["nodeport_port"].stdout }}:{{hostvars["bastion"]["nodeport_ip"].stdout }}:{{ hostvars["bastion"]["nodeport_port"].stdout }} -N bastion
+        dest: "./start_port_forwarding.sh"
+        mode: 0755
+    
