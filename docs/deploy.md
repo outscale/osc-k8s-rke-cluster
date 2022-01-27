@@ -32,6 +32,7 @@ Once your infrastructure ready, you are ready to deploy RKE and some cloud speci
 First, deploy RKE (this will also install CCM):
 ```
 rke up --config rke/cluster.yml
+sed -i "s|server:.*$|server: \"$(cat kube-apiserver-url.txt):6443\"|" rke/kube_config_cluster.yml
 ```
 
 Then to complete the cluster initialization, install the CSI driver:

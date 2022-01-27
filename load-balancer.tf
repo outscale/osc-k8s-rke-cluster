@@ -26,8 +26,10 @@ resource "outscale_load_balancer" "lb-kube-apiserver" {
   }
 }
 
-output "kube-apiserver-url" {
-  value = "https://${outscale_load_balancer.lb-kube-apiserver.dns_name}"
+resource "local_file" "kube-apiserver-url" {
+  filename        = "${path.root}/kube-apiserver-url.txt"
+  file_permission = "0660"
+  content         = "https://${outscale_load_balancer.lb-kube-apiserver.dns_name}"
 }
 
 resource "outscale_load_balancer_vms" "backend_vms" {
