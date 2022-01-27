@@ -13,8 +13,8 @@
       command:
         cmd: helm plugin install https://github.com/aslafy-z/helm-git --version 0.11.1
         creates: ~/.local/share/helm/plugins/helm-git
-    - name: Add OSC repo
+    - name: Add Outscale repository
       command:
         cmd: helm repo add osc git+https://www.github.com/outscale-dev/osc-bsu-csi-driver/@osc-bsu-csi-driver?ref=v0.0.14beta
-    - name: Install osc-csi
+    - name: Install osc-bsu-csi-driver
       command: helm install osc-bsu-csi-driver osc/osc-bsu-csi-driver --namespace kube-system --set enableVolumeScheduling=true --set enableVolumeResizing=true --set enableVolumeSnapshot=true --set region={{region}} --set image.repository=outscale/osc-ebs-csi-driver --set image.tag=v0.0.14beta

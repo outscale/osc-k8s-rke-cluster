@@ -135,7 +135,7 @@ addons:
 addons_include:
   - "${path.root}/cloud-provider-osc/secrets.yaml"
   - "https://raw.githubusercontent.com/outscale-dev/cloud-provider-osc/v0.0.9beta/deploy/osc-ccm-manifest.yml"
-  - "${path.root}/osc-csi/secrets.yaml"
+  - "${path.root}/csi/secrets.yaml"
   - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-5.0/client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
   - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-5.0/client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
   - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-5.0/client/config/crd/snapshot.storage.k8s.io_volumesnapshots.yaml
@@ -194,5 +194,5 @@ bastion_host:
   ssh_key_path: ${path.root}/bastion/bastion.pem
 EOT
   )
-  depends_on = [local_file.cloud-provider-osc_secrets, local_file.osc-csi_secrets]
+  depends_on = [local_file.cloud-provider-osc_secrets, local_file.csi_secrets]
 }

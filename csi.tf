@@ -1,5 +1,5 @@
-resource "local_file" "osc-csi_secrets" {
-  filename        = "${path.root}/osc-csi/secrets.yaml"
+resource "local_file" "csi_secrets" {
+  filename        = "${path.root}/csi/secrets.yaml"
   file_permission = "0660"
   content         = <<-EOF
 apiVersion: v1
@@ -13,8 +13,8 @@ stringData:
 EOF
 }
 
-resource "local_file" "osc-csi_ansible-vars" {
-  filename        = "${path.root}/osc-csi/ansible-vars.yaml"
+resource "local_file" "csi_ansible_vars" {
+  filename        = "${path.root}/csi/ansible-vars.yaml"
   file_permission = "0660"
   content         = <<-EOF
 {
