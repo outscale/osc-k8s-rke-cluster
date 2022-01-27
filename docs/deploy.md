@@ -35,6 +35,8 @@ rke up --config rke/cluster.yml
 sed -i "s|server:.*$|server: \"$(cat kube-apiserver-url.txt):6443\"|" rke/kube_config_cluster.yml
 ```
 
+Note: the `sed` command is used to setup load balancer in kubeconfig file, see [this issue](https://github.com/rancher/rke/issues/705) for more details.
+
 Then to complete the cluster initialization, install the CSI driver:
 ```
 scp -F ssh_config rke/kube_config_cluster.yml bastion:.kube/config
