@@ -1,5 +1,5 @@
 resource "local_file" "ccm_secrets" {
-  filename        = "${path.root}/ccm/secrets.yaml"
+  filename        = "${path.root}/addons/ccm/secrets.yaml"
   file_permission = "0660"
   content         = <<-EOF
 apiVersion: v1

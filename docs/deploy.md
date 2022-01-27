@@ -27,9 +27,7 @@ terraform apply
 
 # Deploying Kubernetes cluster
 
-Once your infrastructure ready, you are ready to deploy RKE and some cloud specific controllers like cloud controller manager (CCM) and cloud storage interface (CSI).
-
-First, deploy RKE (this will also install CCM):
+Once your infrastructure ready, you are ready to deploy your cluster using RKE:
 ```
 rke up --config rke/cluster.yml
 sed -i "s|server:.*$|server: \"$(cat kube-apiserver-url.txt):6443\"|" rke/kube_config_cluster.yml
@@ -37,13 +35,8 @@ sed -i "s|server:.*$|server: \"$(cat kube-apiserver-url.txt):6443\"|" rke/kube_c
 
 Note: the `sed` command is used to setup load balancer in kubeconfig file, see [this issue](https://github.com/rancher/rke/issues/705) for more details.
 
-Then to complete the cluster initialization, install the CSI driver:
-```
-scp -F ssh_config rke/kube_config_cluster.yml bastion:.kube/config
-ANSIBLE_CONFIG=ansible.cfg ansible-playbook csi/playbook.yaml
-```
 
-# Querying the cluster
+# Quick testing the cluster
 
 Once RKE deployment is successful, you should be able to list nodes and use your cluster.
 
@@ -58,6 +51,17 @@ If needed, you can connect to any worker or control-plane node using SSH:
 ```
 ssh -F ssh_config worker-0
 ssh -F ssh_config control-plane-0
+```
+
+# Deploy more things
+
+As this cluster to deployed on Outscale IaaS, you are probably interested to install Outscale's [Cloud Controller Manager (CCM)](../addons/ccm/README.md) and a Cloud Storage Interface (CSI).
+
+
+To install the CSI driver:
+```
+scp -F ssh_config rke/kube_config_cluster.yml bastion:.kube/config
+ANSIBLE_CONFIG=ansible.cfg ansible-playbook csi/playbook.yaml
 ```
 
 # Cleaning Up
