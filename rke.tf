@@ -129,6 +129,7 @@ network:
 authentication:
   strategy: x509
   sans:
+${join("\n", [for i in range(var.control_plane_count) : format("   - 10.0.1.%d", 10 + i)])}
    - ${outscale_load_balancer.lb-kube-apiserver.dns_name}
   webhook: null
 addons:
