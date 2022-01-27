@@ -16,48 +16,49 @@ export TF_VAR_region="eu-west-2"
 
 By editing ['terraform.tfvars'](terraform.tfvars), you can adjust the number of worker/control-plane nodes, size of node and more.
 
-# Deploy
+# Deploying infrastructure
 
-First deploy infrastructure resources:
+This step will create infrastructure components as well as configuration files needed to bootstrap cluster creation.
+
 ```
 terraform init
 terraform apply
 ```
 
-Then you should be able to deploy RKE using:
+# Deploying Kubernetes cluster
+
+Once your infrastructure ready, you are ready to deploy RKE and some cloud specific controllers like cloud controller manager (CCM) and cloud storage interface (CSI).
+
+First, deploy RKE (this will also install CCM):
 ```
 rke up --config rke/cluster.yml
 ```
 
-You can now copy your kubeconfig file to bastion host:
+Then to complete the cluster initialization, install the CSI driver:
 ```
 scp -F ssh_config rke/kube_config_cluster.yml bastion:.kube/config
-```
-
-Then to complete the cluster initialization, install the CSI driver
-```
 ANSIBLE_CONFIG=ansible.cfg ansible-playbook csi/playbook.yaml
 ```
 
-Connect to bastion and test kubeapi-server:
+# Querying the cluster
+
+Once RKE deployment is successful, you should be able to list nodes and use your cluster.
+
 ```
-ssh -F ssh_config bastion
+export KUBECONFIG=rke/kube_config_cluster.yml
 kubectl get nodes
 ```
 
 For further testing, check [testing section](testing.md).
 
-If needed, you can connect to any worker or control-plane node:
+If needed, you can connect to any worker or control-plane node using SSH:
 ```
 ssh -F ssh_config worker-0
 ssh -F ssh_config control-plane-0
 ```
 
-> **_NOTE:_**  A loadbalancer is created to access the cluster from the outside, you have to modify the IP of the server by the LB DNS name in the `rke/kube_config_cluster.yml`
-
-
 # Cleaning Up
-First destroy your cluster using RKE:
+First destroy your cluster using RKE, this will also remove dynamically created cloud resources perfomed by CCM or CSI.
 ```
 rke remove --config rke/cluster.yml
 ```
