@@ -14,7 +14,7 @@ kubectl apply -f https://raw.githubusercontent.com/outscale-dev/cloud-provider-o
 
 You can use a simple deployment app using a Service of type LoadBalancer with 2048 game:
 ```
-kubectl apply -f addons/ccm/2048.yml
+kubectl apply -f addons/ccm/2048.yaml
 kubectl get svc -n 2048
 ```
 
