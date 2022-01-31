@@ -17,7 +17,7 @@ resource "outscale_security_group_rule" "kube-apiserver" {
 resource "outscale_load_balancer" "lb-kube-apiserver" {
   load_balancer_name = "${var.cluster_name}-kube-apiserver"
   subnets            = [outscale_subnet.nodes.subnet_id]
-  security_groups = [outscale_security_group.lb-kube-apiserver.security_group_id]
+  security_groups    = [outscale_security_group.lb-kube-apiserver.security_group_id]
   listeners {
     backend_port           = 6443
     backend_protocol       = "TCP"
