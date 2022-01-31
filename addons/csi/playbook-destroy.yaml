@@ -1,0 +1,26 @@
+---
+- name: Setup OSC-CSI
+  hosts: localhost
+  vars_files:
+    - "./ansible-vars.yaml"
+  environment:
+    HELM_PLUGINS: "{{playbook_dir}}/helm/plugins"
+    HELM_BIN: "{{playbook_dir}}/helm/bin/helm"
+    KUBECONFIG: "{{playbook_dir}}/../../rke/kube_config_cluster.yml"
+    HELM_REPOSITORY_CONFIG: "{{playbook_dir}}/helm/repositories.yaml"
+    HELM_REPOSITORY_CACHE: "{{playbook_dir}}/helm/repository"
+    HELM_CACHE_HOME: "{{playbook_dir}}/helm/cache"
+    HELM_CONFIG_HOME: "{{playbook_dir}}/helm/config"
+    HELM_DATA_HOME: "{{playbook_dir}}/helm/data"
+  tasks:
+    - name: Register a variable
+      command: $HELM_BIN list --deployed --namespace kube-system
+      register: helm_list
+      ignore_errors: true 
+    - name: Uninstall osc-bsu-csi-driver
+      command: $HELM_BIN uninstall osc-bsu-csi-driver --namespace kube-system --wait
+      when: helm_list.stdout.find('osc-bsu-csi-driver') != -1
+    - name: Remove helm
+      command: 
+        cmd: rm -rf "{{playbook_dir}}/helm"
+        removes: "{{playbook_dir}}/helm"

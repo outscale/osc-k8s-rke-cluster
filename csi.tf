@@ -1,5 +1,5 @@
 resource "local_file" "csi_secrets" {
-  filename        = "${path.root}/csi/secrets.yaml"
+  filename        = "${path.root}/addons/csi/secrets.yaml"
   file_permission = "0660"
   content         = <<-EOF
 apiVersion: v1
@@ -14,7 +14,7 @@ EOF
 }
 
 resource "local_file" "csi_ansible_vars" {
-  filename        = "${path.root}/csi/ansible-vars.yaml"
+  filename        = "${path.root}/addons/csi/ansible-vars.yaml"
   file_permission = "0660"
   content         = <<-EOF
 {

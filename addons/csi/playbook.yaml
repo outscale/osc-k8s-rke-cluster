@@ -1,0 +1,29 @@
+---
+- name: Setup OSC-CSI
+  hosts: localhost
+  vars_files:
+    - "./ansible-vars.yaml"
+  environment:
+    HELM_PLUGINS: "{{playbook_dir}}/helm/plugins"
+    HELM_BIN: "{{playbook_dir}}/helm/bin/helm"
+    KUBECONFIG: "{{playbook_dir}}/../../rke/kube_config_cluster.yml"
+    HELM_REPOSITORY_CONFIG: "{{playbook_dir}}/helm/repositories.yaml"
+    HELM_REPOSITORY_CACHE: "{{playbook_dir}}/helm/repository"
+    HELM_CACHE_HOME: "{{playbook_dir}}/helm/cache"
+    HELM_CONFIG_HOME: "{{playbook_dir}}/helm/config"
+    HELM_DATA_HOME: "{{playbook_dir}}/helm/data"
+  tasks:
+    - name: download helm
+      command: 
+        cmd: /bin/bash -c "mkdir -p ./helm/bin && wget https://get.helm.sh/helm-v3.8.0-rc.1-linux-amd64.tar.gz && tar -zxvf helm-v3.8.0-rc.1-linux-amd64.tar.gz && rm -r helm-v3.8.0-rc.1-linux-amd64.tar.gz && mv linux-amd64/helm $HELM_BIN && chmod +x $HELM_BIN && rm -r linux-amd64"
+        creates: $HELM_BIN
+    - name: Install Helm-git
+      command:
+        cmd: $HELM_BIN plugin install https://github.com/aslafy-z/helm-git --version 0.11.1
+        creates: "$HELM_PLUGINS/helm-git"
+    - name: Add Outscale repository
+      command:
+        cmd: $HELM_BIN repo add osc git+https://www.github.com/outscale-dev/osc-bsu-csi-driver/@osc-bsu-csi-driver?ref=v0.0.14beta
+    - name: Install osc-bsu-csi-driver
+      command: $HELM_BIN upgrade --install osc-bsu-csi-driver osc/osc-bsu-csi-driver --namespace kube-system --set enableVolumeScheduling=true --set enableVolumeResizing=true --set enableVolumeSnapshot=true --set region={{region}} --set image.repository=outscale/osc-ebs-csi-driver --set image.tag=v0.0.14beta
+
