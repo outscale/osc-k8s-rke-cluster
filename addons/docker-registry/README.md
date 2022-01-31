@@ -21,3 +21,9 @@ First, enable SSH port forwarding
 ```
 
 Then, you can access the repo by using the IP and the port that is deplayed by the previous script.
+
+# Uninstall
+
+```
+ANSIBLE_CONFIG=ansible.cfg ansible-playbook addons/docker-registry/playbook-destroy.yaml
+```

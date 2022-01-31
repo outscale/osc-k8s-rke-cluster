@@ -1,0 +1,45 @@
+---
+- name: Setup docker registry
+  hosts: localhost
+  environment:
+    HELM_PLUGINS: "{{playbook_dir}}/helm/plugins"
+    HELM_BIN: "{{playbook_dir}}/helm/bin/helm"
+    KUBECONFIG: "{{playbook_dir}}/../../rke/kube_config_cluster.yml"
+    HELM_REPOSITORY_CONFIG: "{{playbook_dir}}/helm/repositories.yaml"
+    HELM_REPOSITORY_CACHE: "{{playbook_dir}}/helm/repository"
+    HELM_CACHE_HOME: "{{playbook_dir}}/helm/cache"
+    HELM_CONFIG_HOME: "{{playbook_dir}}/helm/config"
+    HELM_DATA_HOME: "{{playbook_dir}}/helm/data"
+  tasks:
+    - name: Register a variable
+      command: $HELM_BIN list --deployed
+      register: helm_list
+      ignore_errors: true 
+    - name: Uninstall docker-registry
+      command: $HELM_BIN uninstall docker-registry --wait
+      when: helm_list.stdout.find('docker-registry') != -1
+    - name: Remove helm
+      command: 
+        cmd: rm -rf "{{playbook_dir}}/helm"
+        removes: "{{playbook_dir}}/helm"
+- name: Setup Docker
+  hosts: bastion, control_planes, workers
+  tasks:
+    - name: Add registry to insecure registry
+      become: yes
+      command: 
+        cmd: rm /etc/docker/daemon.json
+        removes: /etc/docker/daemon.json
+    - name: restart docker
+      become: yes
+      systemd:
+        name: docker
+        state: restarted
+- name: remove tunnel forwarding script
+  hosts: localhost
+  tasks:
+    - name: Remove 
+      command: 
+        cmd: rm -f "./start_port_forwarding.sh"
+        removes: "./start_port_forwarding.sh"
+    

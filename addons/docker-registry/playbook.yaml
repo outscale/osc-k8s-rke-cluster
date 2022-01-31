@@ -1,20 +1,30 @@
 ---
 - name: Setup docker registry
-  hosts: bastion
+  hosts: localhost
+  environment:
+    HELM_PLUGINS: "{{playbook_dir}}/helm/plugins"
+    HELM_BIN: "{{playbook_dir}}/helm/bin/helm"
+    KUBECONFIG: "{{playbook_dir}}/../../rke/kube_config_cluster.yml"
+    HELM_REPOSITORY_CONFIG: "{{playbook_dir}}/helm/repositories.yaml"
+    HELM_REPOSITORY_CACHE: "{{playbook_dir}}/helm/repository"
+    HELM_CACHE_HOME: "{{playbook_dir}}/helm/cache"
+    HELM_CONFIG_HOME: "{{playbook_dir}}/helm/config"
+    HELM_DATA_HOME: "{{playbook_dir}}/helm/data"
   tasks:
     - name: download helm
-      become: yes
       command: 
-        cmd: /bin/bash -c "wget https://get.helm.sh/helm-v3.8.0-rc.1-linux-amd64.tar.gz && tar -zxvf helm-v3.8.0-rc.1-linux-amd64.tar.gz && mv linux-amd64/helm /usr/local/bin/helm && chmod +x /usr/local/bin/helm"
-        creates: /usr/local/bin/helm
+        cmd: /bin/bash -c "mkdir -p ./helm/bin && wget https://get.helm.sh/helm-v3.8.0-rc.1-linux-amd64.tar.gz && tar -zxvf helm-v3.8.0-rc.1-linux-amd64.tar.gz && rm -r helm-v3.8.0-rc.1-linux-amd64.tar.gz && mv linux-amd64/helm $HELM_BIN && chmod +x $HELM_BIN && rm -r linux-amd64"
+        creates: $HELM_BIN
     - name: Add twun helm repo
       command:
-        cmd: helm repo add twuni https://helm.twun.io
+        cmd: $HELM_BIN repo add twuni https://helm.twun.io
     - name: Install docker-registry
       command:
-        cmd: helm upgrade --install --wait --wait-for-jobs docker-registry twuni/docker-registry --set "service.type=NodePort"
+        cmd: $HELM_BIN upgrade --install --wait --wait-for-jobs docker-registry twuni/docker-registry --set "service.type=NodePort"
 - name: Retrieve nodeport information
-  hosts: bastion
+  hosts: localhost
+  environment:
+    KUBECONFIG: "{{playbook_dir}}/../../rke/kube_config_cluster.yml"
   tasks:
     - name: Add insecure registry
       command:
@@ -30,7 +40,7 @@
     - name: Add registry to insecure registry
       become: yes
       copy:  
-        content:  '{ "insecure-registries":["{{ hostvars["bastion"]["nodeport_ip"].stdout }}:{{ hostvars["bastion"]["nodeport_port"].stdout }}"] }'
+        content:  '{ "insecure-registries":["{{ hostvars["localhost"]["nodeport_ip"].stdout }}:{{ hostvars["localhost"]["nodeport_port"].stdout }}"] }'
         dest: "/etc/docker/daemon.json"
     - name: restart docker
       become: yes
@@ -47,9 +57,9 @@
           set -e
           project_root=$(cd "$(dirname $0)/../.." && pwd)
           cd "$project_root"
-          echo "You can access the Docker registry by using \"localhost:4242\" from your computer or \"{{hostvars["bastion"]["nodeport_ip"].stdout }}:{{ hostvars["bastion"]["nodeport_port"].stdout }}\" from the cluster."
+          echo "You can access the Docker registry by using \"localhost:4242\" from your computer or \"{{hostvars["localhost"]["nodeport_ip"].stdout }}:{{ hostvars["localhost"]["nodeport_port"].stdout }}\" from the cluster."
           echo "Press Ctrl-C to stop port-forwarding."
-          ssh -F ssh_config -L 4242:{{hostvars["bastion"]["nodeport_ip"].stdout }}:{{ hostvars["bastion"]["nodeport_port"].stdout }} -N bastion
+          ssh -F ssh_config -L 4242:{{hostvars["localhost"]["nodeport_ip"].stdout }}:{{ hostvars["localhost"]["nodeport_port"].stdout }} -N bastion
         dest: "./start_port_forwarding.sh"
         mode: 0755
     
