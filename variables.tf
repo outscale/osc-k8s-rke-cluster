@@ -9,3 +9,4 @@ variable "worker_count" {}
 variable "bastion_vm_type" {}
 variable "cluster_name" {}
 variable "kubernetes_version" {}
+variable "will_install_ccm" {}

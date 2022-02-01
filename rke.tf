@@ -163,7 +163,7 @@ ingress:
   nginx_ingress_controller_priority_class_name:
 cluster_name: ${var.cluster_name}
 cloud_provider:
-  name: "external"
+${var.will_install_ccm ? "  name: \"external\"" : ""}
 prefix_path:
 win_prefix_path:
 addon_job_timeout: 0
