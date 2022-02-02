@@ -9,8 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: generate a unique variable based on timestamp
-      run: echo cluster_name=cluster--$(date +%s) >> $GITHUB_ENV
     - name: Setup Terraform  
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Format
@@ -21,40 +19,19 @@ jobs:
     needs: code-quality
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-    - run: pip install ansible
-    - uses: actions/setup-node@v2
+    - name: Deploy Cluster
+      uses: outscale-dev/osc-k8s-rke-cluster/github_actions/deploy_cluster@master
       with:
-        node-version: '14'
-    - name: generate a unique variable based on timestamp
-      run: echo cluster_name=cluster$(date +%s) >> $GITHUB_ENV
-    - name: Setup Terraform  
-      uses: hashicorp/setup-terraform@v1
-    - name: Install rke
-      run: wget https://github.com/rancher/rke/releases/download/v1.3.4/rke_linux-amd64
-    - name: Fix permissions rke binary
-      run: chmod +x ./rke_linux-amd64
-    - name: Terraform Init
-      id: init
-      run: terraform init
-    - name: Terraform Validate
-      id: validate
-      run: terraform validate -no-color
-    - name: Terraform Apply
-      run: terraform apply -var "cluster_name=${{ env.cluster_name }}" -auto-approve
-      env:    
-        TF_VAR_access_key_id: ${{ secrets.OSC_ACCESS_KEY }}
-        TF_VAR_secret_key_id: ${{ secrets.OSC_SECRET_KEY }}
-        TF_VAR_region: ${{ secrets.OSC_REGION }}
-    - name: Set up the cluster
-      run: ./rke_linux-amd64 up --config rke/cluster.yml
-    - name: Shutdown the cluster
-      run: ./rke_linux-amd64 remove --config rke/cluster.yml --force
-    - name: Terraform Destroy
-      run: terraform destroy -var "cluster_name=${{ env.cluster_name }}" -auto-approve
+        repository_folder: "./"
+        osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
+        osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
+        osc_region: ${{ secrets.OSC_REGION }}
+    - name: Destroy Cluster
+      uses: outscale-dev/osc-k8s-rke-cluster/github_actions/destroy_cluster@master
       if: ${{ always() }}
-      env:   
-        TF_VAR_access_key_id: ${{ secrets.OSC_ACCESS_KEY }}
-        TF_VAR_secret_key_id: ${{ secrets.OSC_SECRET_KEY }}
-        TF_VAR_region: ${{ secrets.OSC_REGION }}
+      with:
+        repository_folder: "./"
+        osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
+        osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
+        osc_region: ${{ secrets.OSC_REGION }}
 

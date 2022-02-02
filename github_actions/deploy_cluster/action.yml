@@ -1,0 +1,64 @@
+name: 'Deploy cluter'
+description: 'Deploy k8s cluster'
+inputs:
+  osc_access_key:
+    description: 'ACCESS KEY'
+    required: true
+  osc_secret_key:
+    description: 'SECRET KEY'
+    required: true
+  osc_region:
+    description: 'Region'
+    required: true
+  will_install_ccm:
+    description: 'Configure the cluster for future CCM installation ("true" or "false")'
+    required: true
+    default: "false"
+  repository_folder:
+    description: 'Folder where the repo can be found'
+    required: false
+    default: "./"
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v2
+    - run: pip install ansible
+      shell: bash
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - name: generate a unique variable based on timestamp
+      run: echo cluster_name=cluster$(date +%s) >> $GITHUB_ENV
+      shell: bash
+    - name: Setup Terraform  
+      uses: hashicorp/setup-terraform@v1
+    - name: Install rke
+      run: |
+        wget https://github.com/rancher/rke/releases/download/v1.3.4/rke_linux-amd64
+        chmod +x ./rke_linux-amd64
+      working-directory: ${{ inputs.repository_folder }}
+      shell: bash
+    - name: Terraform Init
+      id: init
+      run: terraform init
+      working-directory: ${{ inputs.repository_folder }}
+      shell: bash
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+      working-directory: ${{ inputs.repository_folder }}
+      shell: bash
+    - name: Terraform Apply
+      run: terraform apply -var "cluster_name=${{ env.cluster_name }}" -var "will_install_ccm=${{ inputs.will_install_ccm }}" -auto-approve
+      env:    
+        TF_VAR_access_key_id: ${{ inputs.osc_access_key }}
+        TF_VAR_secret_key_id: ${{ inputs.osc_secret_key }}
+        TF_VAR_region: ${{ inputs.osc_region }}
+      working-directory: ${{ inputs.repository_folder }}
+      shell: bash
+    - name: Set up the cluster
+      run: |
+        ./rke_linux-amd64 up --config rke/cluster.yml
+        /bin/bash -c 'sed -i "s|server:.*$|server: \"$(cat kube-apiserver-url.txt):6443\"|" rke/kube_config_cluster.yml'
+      working-directory: ${{ inputs.repository_folder }}
+      shell: bash
