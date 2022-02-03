@@ -20,7 +20,7 @@
         cmd: $HELM_BIN repo add twuni https://helm.twun.io
     - name: Install docker-registry
       command:
-        cmd: $HELM_BIN upgrade --install --wait --wait-for-jobs docker-registry twuni/docker-registry --set "service.type=NodePort"
+        cmd: $HELM_BIN upgrade --install --wait --wait-for-jobs docker-registry twuni/docker-registry --set "service.type=NodePort" --set-string "tolerations[0].key=node.cloudprovider.kubernetes.io/uninitialized" --set-string "tolerations[0].value=true" --set-string "tolerations[0].effect=NoSchedule" --set-string "tolerations[0].operator=Equal"
 - name: Retrieve nodeport information
   hosts: localhost
   environment:
