@@ -16,4 +16,5 @@ The Kubernetes cluster is deployed inside a [Net](https://wiki.outscale.net/disp
 - [Deploy](deploy.md)
 - [Testing](testing.md)
 - [Contributing](contributing.md)
+- [Github Actions](githubaction.md)
 - [Addons](../addons/)
