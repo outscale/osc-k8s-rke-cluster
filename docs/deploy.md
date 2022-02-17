@@ -55,14 +55,9 @@ ssh -F ssh_config control-plane-0
 
 # Deploy more things
 
-As this cluster to deployed on Outscale IaaS, you are probably interested to install Outscale's [Cloud Controller Manager (CCM)](../addons/ccm/README.md) and a Cloud Storage Interface (CSI).
+As this cluster to deployed on Outscale IaaS, you are probably interested to install Outscale's [Cloud Controller Manager (CCM)](../addons/ccm/README.md) and Outscale's [Cloud Storage Interface (CSI)](../addons/csi/README.md).
 
-
-To install the CSI driver:
-```
-scp -F ssh_config rke/kube_config_cluster.yml bastion:.kube/config
-ANSIBLE_CONFIG=ansible.cfg ansible-playbook csi/playbook.yaml
-```
+See [/addons](../addons) for even more things to deploy (not limited to).
 
 # Cleaning Up
 First destroy your cluster using RKE, this will also remove dynamically created cloud resources perfomed by CCM or CSI.
