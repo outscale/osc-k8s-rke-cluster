@@ -4,7 +4,7 @@ This reprository contain a way to deploy a [kubernetes](https://kubernetes.io/) 
 
 # Architecture
 
-The Kubernetes cluster is deployed inside a [Net](https://wiki.outscale.net/display/EN/About+VPCs) with three [Subnets](https://wiki.outscale.net/display/EN/Getting+Information+About+Your+Subnets):
+The Kubernetes cluster is deployed inside a [Net](https://wiki.outscale.net/display/EN/About+VPCs) with two [Subnets](https://wiki.outscale.net/display/EN/Getting+Information+About+Your+Subnets):
 - One subnet (10.0.0.0/24) containing:
   - A bastion host
   - A [NAT Service](https://wiki.outscale.net/display/EN/About+NAT+Gateways) to provide internet access to nodes.
