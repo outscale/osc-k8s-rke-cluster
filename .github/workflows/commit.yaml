@@ -26,6 +26,8 @@ jobs:
         osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
         osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
         osc_region: ${{ secrets.OSC_REGION }}
+        rke_version: "v1.3.9"
+        kubernetes_version: "v1.22.7-rancher1-2"
     - name: Destroy Cluster
       uses: outscale-dev/osc-k8s-rke-cluster/github_actions/destroy_cluster@master
       if: ${{ always() }}
