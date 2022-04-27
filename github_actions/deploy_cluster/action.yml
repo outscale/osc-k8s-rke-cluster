@@ -18,6 +18,14 @@ inputs:
     description: 'Folder where the repo can be found'
     required: false
     default: "./"
+  rke_version:
+    description: 'Version of rke to use'
+    required: false
+    default: "v1.3.4"
+  kubernetes_version:
+    description: 'Version of the kubernetes to deploy (See https://github.com/rancher/rke/releases)'
+    required: false
+    default: "v1.22.5-rancher1-1"
 runs:
   using: "composite"
   steps:
@@ -34,7 +42,7 @@ runs:
       uses: hashicorp/setup-terraform@v1
     - name: Install rke
       run: |
-        wget https://github.com/rancher/rke/releases/download/v1.3.4/rke_linux-amd64
+        wget https://github.com/rancher/rke/releases/download/${{ inputs.rke_version }}/rke_linux-amd64
         chmod +x ./rke_linux-amd64
       working-directory: ${{ inputs.repository_folder }}
       shell: bash
@@ -49,7 +57,7 @@ runs:
       working-directory: ${{ inputs.repository_folder }}
       shell: bash
     - name: Terraform Apply
-      run: terraform apply -var "cluster_name=${{ env.cluster_name }}" -var "will_install_ccm=${{ inputs.will_install_ccm }}" -auto-approve
+      run: terraform apply -var "cluster_name=${{ env.cluster_name }}" -var "will_install_ccm=${{ inputs.will_install_ccm }}" -var "kubernetes_version=${{ inputs.kubernetes_version }}" -auto-approve
       env:    
         TF_VAR_access_key_id: ${{ inputs.osc_access_key }}
         TF_VAR_secret_key_id: ${{ inputs.osc_secret_key }}
