@@ -6,13 +6,15 @@ See [action.yml](action.yml)
 
 ## Inputs
 
-| Parameter           | Description                                                           | Required | Default   |
-| :------------------ | :-------------------------------------------------------------------- | :------- | :-------- |
-| `osc_access_key`    | OSC Access Key                                                        | `true`   | `""`      |
-| `osc_secret_key`    | OSC Secret Key                                                        | `true`   | `""`      |
-| `osc_region`        | OSC region                                                            | `true`   | `""`      |
-| `will_install_ccm`  | Configure the cluster for future CCM installation ("true" or "false") | `false`  | `"false"` |
-| `repository_folder` | Folder where this repo is stored                                      | `false`  | `"./"`    |
+| Parameter            | Description                                                                       | Required | Default                |
+| :------------------- | :-------------------------------------------------------------------------------- | :------- | :--------------------- |
+| `osc_access_key`     | OSC Access Key                                                                    | `true`   | `""`                   |
+| `osc_secret_key`     | OSC Secret Key                                                                    | `true`   | `""`                   |
+| `osc_region`         | OSC region                                                                        | `true`   | `""`                   |
+| `will_install_ccm`   | Configure the cluster for future CCM installation ("true" or "false")             | `false`  | `"false"`              |
+| `repository_folder`  | Folder where this repo is stored                                                  | `false`  | `"./"`                 |
+| `rke_version`        | Version of rke to use                                                             | `false`  | `"v1.3.4"`             |
+| `kubernetes_version` | Version of the kubernetes to deploy (See https://github.com/rancher/rke/releases) | `false`  | `"v1.22.5-rancher1-1"` |
 
 ## Output
 N/A
