@@ -26,10 +26,65 @@ inputs:
     description: 'Version of the kubernetes to deploy (See https://github.com/rancher/rke/releases)'
     required: false
     default: "v1.22.5-rancher1-1"
+  bastion_vm_type:
+    description: 'Vm type of bastion instance'
+    required: false
+    default: "tinav5.c4r8p1"
+  bastion_volume_type:
+    description: 'Volume type of bastion instance'
+    required: false
+    default: "standard"
+  bastion_volume_size:
+    description: 'Volume size of bastion instance'
+    required: false
+    default: 15
+  bastion_iops:
+    description: 'Iops of bastion instance'
+    required: false
+    default: 1500
+  control_plane_vm_type:
+    description: 'Vm type of control plane instance'
+    required: false
+    default: "tinav5.c4r8p1"
+  control_plane_count:
+    description: 'Number of control plane instance'
+    required: false
+    default: 1
+  control_plane_volume_type:
+    description: 'Volume type of control plane instance'
+    required: false
+    default: "standard"
+  control_plane_volume_size:
+    description: 'Volume size of control plane instance'
+    required: false
+    default: 15
+  control_plane_iops:
+    description: 'Iops of control plane instance'
+    required: false
+    default: 1500
+  worker_vm_type:
+    description: 'Vm type of worker instance'
+    required: false
+    default: "tinav5.c4r8p1"
+  worker_count:
+    description: 'Number of worker instance'
+    required: false
+    default: 2
+  worker_volume_type:
+    description: 'Volume type of worker instance'
+    required: false
+    default: "standard"
+  worker_volume_size:
+    description: 'Volume size of worker instance'
+    required: false
+    default: 15
+  worker_iops:
+    description: 'Iops oof worker instance'
+    required: false
+    default: 1500
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-python@v2
     - run: pip install ansible
       shell: bash
     - uses: actions/setup-node@v2
@@ -57,7 +112,7 @@ runs:
       working-directory: ${{ inputs.repository_folder }}
       shell: bash
     - name: Terraform Apply
-      run: terraform apply -var "cluster_name=${{ env.cluster_name }}" -var "will_install_ccm=${{ inputs.will_install_ccm }}" -var "kubernetes_version=${{ inputs.kubernetes_version }}" -auto-approve
+      run: terraform apply -var "cluster_name=${{ env.cluster_name }}" -var "will_install_ccm=${{ inputs.will_install_ccm }}" -var "kubernetes_version=${{ inputs.kubernetes_version }}" -var "bastion_vm_type=${{ inputs.bastion_vm_type }}" -var "bastion_volume_type=${{ inputs.bastion_volume_type }}" -var "bastion_volume_size=${{ inputs.bastion_volume_size}}" -var "bastion_iops=${{ inputs.bastion_iops}}" -var "control_plane_vm_type=${{ inputs.control_plane_vm_type }}" -var "control_plane_count=${{ inputs.control_plane_count}}" -var "control_plane_volume_type=${{ inputs.control_plane_volume_type }}" -var "control_plane_volume_size=${{ inputs.control_plane_volume_size }}"  -var "control_plane_iops=${{ inputs.control_plane_iops }}" -var "worker_vm_type=${{ inputs.worker_vm_type }}" -var "worker_count=${{ inputs.worker_count }}" -var "worker_volume_type=${{ inputs.worker_volume_type }}" -var "worker_volume_size=${{ inputs.worker_volume_size }}" -var "worker_iops=${{ inputs.worker_iops }}" -auto-approve
       env:    
         TF_VAR_access_key_id: ${{ inputs.osc_access_key }}
         TF_VAR_secret_key_id: ${{ inputs.osc_secret_key }}
