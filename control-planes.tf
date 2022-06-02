@@ -5,7 +5,7 @@ locals {
 resource "tls_private_key" "control-planes" {
   count     = var.control_plane_count
   algorithm = "RSA"
-  rsa_bits  = "2048"
+  rsa_bits  = "4096"
 }
 
 resource "local_file" "control-planes-pem" {
@@ -86,8 +86,10 @@ resource "outscale_vm" "control-planes" {
   block_device_mappings {
     device_name = "/dev/sda1"
     bsu {
-      volume_size = 15
-      volume_type = "gp2"
+      delete_on_vm_deletion = true
+      volume_size           = var.control_plane_volume_size
+      volume_type           = var.control_plane_volume_type
+      iops                  = var.control_plane_volume_type == "io1" ? var.control_plane_iops : 0
     }
   }
 

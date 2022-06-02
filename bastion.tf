@@ -45,7 +45,7 @@ resource "outscale_public_ip_link" "bastion" {
 
 resource "tls_private_key" "bastion" {
   algorithm = "RSA"
-  rsa_bits  = "2048"
+  rsa_bits  = "4096"
 }
 
 resource "local_file" "bastion-pem" {
@@ -85,8 +85,10 @@ resource "outscale_vm" "bastion" {
   block_device_mappings {
     device_name = "/dev/sda1"
     bsu {
-      volume_size = 15
-      volume_type = "gp2"
+      delete_on_vm_deletion = true
+      volume_size           = var.bastion_volume_size
+      volume_type           = var.bastion_volume_type
+      iops                  = var.bastion_volume_type == "io1" ? var.bastion_iops : 0
     }
   }
 
@@ -107,7 +109,7 @@ resource "shell_script" "bastion-playbook" {
         ANSIBLE_CONFIG=ansible.cfg ansible-playbook bastion/playbook.yaml
     EOF
     update = <<-EOF
-        ANSIBLE_CONFIG=ansible.cfg ansible-playbook bastion/playbook.yaml
+        ANSIBLE_CONFIG=ansible.cfg ansible-playbook --extra-vars "{\"kubectl_version\": \"${element(split("-rancher", var.kubernetes_version), 0)}\"}" bastion/playbook.yaml
     EOF
     read   = <<-EOF
         echo "{\"file\": \"$(cat bastion/playbook.yaml|base64)\",

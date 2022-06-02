@@ -1,3 +1,4 @@
+
 locals {
   node_names = [for i in range(var.worker_count) : format("ip-10-0-1-%d.%s.compute.internal", 19 + i, var.region)]
 }
@@ -5,7 +6,7 @@ locals {
 resource "tls_private_key" "workers" {
   count     = var.worker_count
   algorithm = "RSA"
-  rsa_bits  = "2048"
+  rsa_bits  = "4096"
 }
 
 resource "local_file" "workers-pem" {
@@ -52,8 +53,10 @@ resource "outscale_vm" "workers" {
   block_device_mappings {
     device_name = "/dev/sda1"
     bsu {
-      volume_size = 15
-      volume_type = "gp2"
+      delete_on_vm_deletion = true
+      volume_size           = var.worker_volume_size
+      volume_type           = var.worker_volume_type
+      iops                  = var.worker_volume_type == "io1" ? var.worker_iops : 0
     }
   }
 
