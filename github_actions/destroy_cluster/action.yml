@@ -22,7 +22,7 @@ runs:
       working-directory: ${{ inputs.repository_folder }}
       shell: bash
     - name: Terraform Destroy
-      run: terraform destroy -auto-approve
+      run: terraform destroy -auto-approve &> /dev/null
       if: ${{ always() }}
       env:   
         TF_VAR_access_key_id: ${{ inputs.osc_access_key }}
