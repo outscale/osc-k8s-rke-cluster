@@ -53,7 +53,8 @@ resource "outscale_vm" "workers" {
     device_name = "/dev/sda1"
     bsu {
       volume_size = 15
-      volume_type = "gp2"
+      volume_type = "io1"
+      iops = 3000
     }
   }
 
