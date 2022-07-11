@@ -1,0 +1,7 @@
+{
+  "GITHUB_USER": "myuser",
+  "GITHUB_TOKEN": "mycluster",
+  "BRANCH": "main",
+  "REPOSITORY": "myrepo",
+  "PATH": "./clusters/my-cluster"
+}
