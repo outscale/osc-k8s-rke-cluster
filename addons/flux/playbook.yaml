@@ -1,0 +1,37 @@
+---
+- name: Setup flux
+  hosts: localhost
+  vars_files:
+    - "./ansible-vars.yaml"
+  environment:
+    KUBECONFIG: "{{playbook_dir}}/../../rke/kube_config_cluster.yml"
+  tasks:
+  - name: Install curl on debian or on ubuntu
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+    with_items:
+    - curl
+    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  - name: Install curl on centos
+    yum:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+    with_items:
+    - curl
+    when: ansible_distribution == 'CentOS'
+  - name: Download flux install file to tmp dir
+    get_url:
+      url: https://fluxcd.io/install.sh
+      dest: /tmp/
+      mode: 0755
+  - name: Execute flux install script
+    shell: /tmp/install.sh
+  - name: Check flux with kubernetes cluster
+    shell: "flux check --pre"
+  - name: Bootstrap flux
+    shell: "flux bootstrap github  --owner={{ GITHUB_USER }} --repository={{ REPOSITORY }} --branch={{ BRANCH }} --path={{ PATH }} --personal"
+    environment: 
+      GITHUB_TOKEN: "{{ GITHUB_TOKEN }}"
