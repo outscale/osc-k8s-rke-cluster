@@ -33,7 +33,7 @@ inputs:
   bastion_volume_type:
     description: 'Volume type of bastion instance'
     required: false
-    default: "standard"
+    default: "gp2"
   bastion_volume_size:
     description: 'Volume size of bastion instance'
     required: false
@@ -53,7 +53,7 @@ inputs:
   control_plane_volume_type:
     description: 'Volume type of control plane instance'
     required: false
-    default: "standard"
+    default: "gp2"
   control_plane_volume_size:
     description: 'Volume size of control plane instance'
     required: false
