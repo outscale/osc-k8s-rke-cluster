@@ -5,13 +5,13 @@ resource "local_file" "rke_cluster_yml" {
     "nodes:\n",
     join("\n", [for i in range(var.control_plane_count) : format(
       <<EOT
-- address: 10.0.1.%d
+- address: %s
   port: 22
   role:
   - controlplane
   - etcd
   - worker
-  hostname_override: ip-10-0-1-%d.%s.compute.internal
+  hostname_override: %s
   user: outscale
   docker_socket: /var/run/docker.sock
   ssh_key:
@@ -21,14 +21,14 @@ resource "local_file" "rke_cluster_yml" {
   labels: {}
   taints: []
 EOT
-    , 10 + i, 10 + i, var.region, i)]),
+    , var.public_cloud ? outscale_vm.control-planes[i].public_ip : outscale_vm.control-planes[i].private_ip, outscale_vm.control-planes[i].private_dns_name, i)]),
     join("\n", [for i in range(var.worker_count) : format(
       <<EOT
-- address: 10.0.1.%d
+- address: %s
   port: 22
   role:
   - worker
-  hostname_override: ip-10-0-1-%d.%s.compute.internal
+  hostname_override: %s
   user: outscale
   docker_socket: /var/run/docker.sock
   ssh_key:
@@ -38,7 +38,7 @@ EOT
   labels: {}
   taints: []
 EOT
-    , 19 + i, 19 + i, var.region, i)]),
+    , var.public_cloud ? outscale_vm.workers[i].public_ip : outscale_vm.workers[i].private_ip, outscale_vm.workers[i].private_dns_name, i)]),
 
     <<EOT
 services:
@@ -129,7 +129,7 @@ network:
 authentication:
   strategy: x509
   sans:
-${join("\n", [for i in range(var.control_plane_count) : format("   - 10.0.1.%d", 10 + i)])}
+${var.public_cloud ? "" : join("\n", [for i in range(var.control_plane_count) : format("   - 10.0.1.%d", 10 + i)])}
    - ${outscale_load_balancer.lb-kube-apiserver.dns_name}
   webhook: null
 addons:
@@ -180,11 +180,7 @@ restore:
   snapshot_name:
 rotate_encryption_key: false
 dns: null
-bastion_host:
-  address: ${outscale_public_ip.bastion.public_ip}
-  port: 22
-  user: outscale
-  ssh_key_path: ${path.root}/bastion/bastion.pem
+${var.public_cloud ? "" : format("bastion_host:\n  address: ${outscale_public_ip.bastion.public_ip}\n  port: 22\n  user: outscale\n  ssh_key_path: ${path.root}/bastion/bastion.pem")}
 EOT
   )
   depends_on = [local_file.csi_secrets]

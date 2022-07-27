@@ -19,4 +19,5 @@ bastion_volume_size       = 15
 bastion_iops              = 1500
 cluster_name              = "phandalin"
 kubernetes_version        = "v1.22.5-rancher1-1" # See available version https://github.com/rancher/rke/releases
-will_install_ccm          = true                 # Set to true if the CCM of osc will be installed 
+will_install_ccm          = false                # Set to true if the CCM of osc will be installed 
+public_cloud              = false
