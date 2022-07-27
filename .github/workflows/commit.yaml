@@ -5,6 +5,8 @@ on:
       - 'master'
   pull_request_target:
     branches: [ master ]
+  workflow_dispatch:
+    
 jobs:
   code-quality:
     runs-on: ubuntu-latest
@@ -15,7 +17,7 @@ jobs:
     - name: Terraform Format
       id: fmt
       run: terraform fmt -check
-  deploy:
+  deploy_private_cloud:
     runs-on: [self-hosted, linux]
     needs: code-quality
     steps:
@@ -46,6 +48,46 @@ jobs:
         worker_volume_type: "io1"
         worker_volume_size: 15
         worker_iops: 1500
+    - name: Destroy Cluster
+      uses: outscale-dev/osc-k8s-rke-cluster/github_actions/destroy_cluster@master
+      if: ${{ always() }}
+      with:
+        repository_folder: "./"
+        osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
+        osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
+        osc_region: ${{ secrets.OSC_REGION }}
+  deploy_public_cloud:
+    runs-on: [self-hosted, linux]
+    needs: [code-quality, deploy_private_cloud]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+    - name: Deploy Cluster
+      uses: outscale-dev/osc-k8s-rke-cluster/github_actions/deploy_cluster@master
+      with:
+        repository_folder: "./"
+        osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
+        osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
+        osc_region: ${{ secrets.OSC_REGION }}
+        rke_version: "v1.3.9"
+        kubernetes_version: "v1.22.7-rancher1-2"
+        bastion_vm_type: "tinav5.c4r8p1"
+        bastion_volume_type: "io1"
+        bastion_volume_size: 15
+        bastion_iops: 1500
+        control_plane_vm_type: "tinav5.c4r8p1"
+        control_plane_count: 1
+        control_plane_volume_type: "io1"
+        control_plane_volume_size: 15
+        control_plane_iops: 1500
+        worker_vm_type: "tinav5.c4r8p1"
+        worker_count: 2
+        worker_volume_type: "io1"
+        worker_volume_size: 15
+        worker_iops: 1500
+        public_cloud: true
     - name: Destroy Cluster
       uses: outscale-dev/osc-k8s-rke-cluster/github_actions/destroy_cluster@master
       if: ${{ always() }}
