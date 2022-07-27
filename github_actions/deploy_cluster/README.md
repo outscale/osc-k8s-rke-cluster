@@ -12,6 +12,7 @@ See [action.yml](action.yml)
 | `osc_secret_key`           | OSC Secret Key                                                                    | `true`   | `""`                          |
 | `osc_region`               | OSC region                                                                        | `true`   | `""`                          |
 | `will_install_ccm`         | Configure the cluster for future CCM installation ("true" or "false")             | `false`  | `"false"`                     |
+| `public_cloud`         | Deploy the cluster in the public or private cloud ("true" for public or "false" for private)             | `false`  | `"false"`                     |
 | `repository_folder`        | Folder where this repo is stored                                                  | `false`  | `"./"`                        |
 | `rke_version`              | Version of rke to use                                                             | `false`  | `"v1.3.4"`                    |
 | `kubernetes_version`       | Version of the kubernetes to deploy (See https://github.com/rancher/rke/releases) | `false`  | `"v1.22.5-rancher1-1"`        |
