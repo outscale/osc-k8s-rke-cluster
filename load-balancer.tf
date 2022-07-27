@@ -1,11 +1,13 @@
 resource "outscale_security_group" "lb-kube-apiserver" {
+  count       = var.public_cloud ? 0 : 1
   description = "Kubernetes LB kube-apiserver (${var.cluster_name})"
-  net_id      = outscale_net.net.net_id
+  net_id      = var.public_cloud ? null : outscale_net.net[0].net_id
 }
 
 resource "outscale_security_group_rule" "kube-apiserver" {
+  count             = var.public_cloud ? 0 : 1
   flow              = "Inbound"
-  security_group_id = outscale_security_group.lb-kube-apiserver.id
+  security_group_id = outscale_security_group.lb-kube-apiserver[0].id
   rules {
     from_port_range = "6443"
     to_port_range   = "6443"
@@ -16,8 +18,9 @@ resource "outscale_security_group_rule" "kube-apiserver" {
 
 resource "outscale_load_balancer" "lb-kube-apiserver" {
   load_balancer_name = "${var.cluster_name}-kube-apiserver"
-  subnets            = [outscale_subnet.nodes.subnet_id]
-  security_groups    = [outscale_security_group.lb-kube-apiserver.security_group_id]
+  subnets            = var.public_cloud ? null : [outscale_subnet.nodes[0].subnet_id]
+  security_groups    = var.public_cloud ? null : [outscale_security_group.lb-kube-apiserver[0].security_group_id]
+  subregion_names    = var.public_cloud ? [format("%sa", var.region)] : null
   listeners {
     backend_port           = 6443
     backend_protocol       = "TCP"

@@ -20,9 +20,19 @@ resource "outscale_keypair" "control-planes" {
   public_key = tls_private_key.control-planes[count.index].public_key_openssh
 }
 
+resource "outscale_public_ip" "control-planes" {
+  count = var.public_cloud ? var.control_plane_count : 0
+}
+
+resource "outscale_public_ip_link" "control-planes" {
+  count     = var.public_cloud ? var.control_plane_count : 0
+  vm_id     = outscale_vm.control-planes[count.index].vm_id
+  public_ip = outscale_public_ip.control-planes[count.index].public_ip
+}
+
 resource "outscale_security_group" "control-plane" {
   description = "Kubernetes control-planes (${var.cluster_name})"
-  net_id      = outscale_net.net.net_id
+  net_id      = var.public_cloud ? null : outscale_net.net[0].net_id
 }
 
 resource "outscale_security_group_rule" "control-plane-ssh" {
@@ -32,7 +42,7 @@ resource "outscale_security_group_rule" "control-plane-ssh" {
     from_port_range = "22"
     to_port_range   = "22"
     ip_protocol     = "tcp"
-    ip_ranges       = ["10.0.0.0/24"]
+    ip_ranges       = var.public_cloud ? ["0.0.0.0/0"] : ["10.0.0.0/24"]
   }
 
   # etcd
@@ -40,7 +50,7 @@ resource "outscale_security_group_rule" "control-plane-ssh" {
     from_port_range = "2379"
     to_port_range   = "2380"
     ip_protocol     = "tcp"
-    ip_ranges       = ["10.0.1.0/24"]
+    ip_ranges       = var.public_cloud ? [for i in range(var.control_plane_count) : format("%s/32", outscale_public_ip.control-planes[i].public_ip)] : ["10.0.1.0/24"]
   }
 
   # service node port range
@@ -48,7 +58,7 @@ resource "outscale_security_group_rule" "control-plane-ssh" {
     from_port_range = "30000"
     to_port_range   = "32767"
     ip_protocol     = "tcp"
-    ip_ranges       = ["10.0.0.0/16"]
+    ip_ranges       = var.public_cloud ? ["0.0.0.0/0"] : ["10.0.0.0/16"]
   }
 
   # kube-apiserver
@@ -56,7 +66,7 @@ resource "outscale_security_group_rule" "control-plane-ssh" {
     from_port_range = "6443"
     to_port_range   = "6443"
     ip_protocol     = "tcp"
-    ip_ranges       = ["10.0.0.0/16"]
+    ip_ranges       = var.public_cloud ? ["0.0.0.0/0"] : ["10.0.0.0/16"]
   }
 }
 
@@ -66,20 +76,20 @@ resource "outscale_vm" "control-planes" {
   vm_type            = var.control_plane_vm_type
   keypair_name       = outscale_keypair.control-planes[count.index].keypair_name
   security_group_ids = [outscale_security_group.control-plane.security_group_id, outscale_security_group.node.security_group_id, outscale_security_group.worker.security_group_id]
-  subnet_id          = outscale_subnet.nodes.subnet_id
-  private_ips        = [format("10.0.1.%d", 10 + count.index)]
+  subnet_id          = var.public_cloud ? null : outscale_subnet.nodes[0].subnet_id
+  private_ips        = var.public_cloud ? null : [format("10.0.1.%d", 10 + count.index)]
 
   provisioner "remote-exec" {
     inline = ["echo ok"]
     connection {
       type                = "ssh"
       user                = "outscale"
-      host                = format("10.0.1.%d", 10 + count.index)
+      host                = var.public_cloud ? outscale_public_ip.control-planes[count.index].public_ip : format("10.0.1.%d", 10 + count.index)
       private_key         = tls_private_key.control-planes[count.index].private_key_pem
-      bastion_host        = outscale_public_ip.bastion.public_ip
-      bastion_private_key = tls_private_key.bastion.private_key_pem
-      bastion_user        = "outscale"
-      bastion_port        = 22
+      bastion_host        = var.public_cloud ? null : outscale_public_ip.bastion.public_ip
+      bastion_private_key = var.public_cloud ? null : tls_private_key.bastion.private_key_pem
+      bastion_user        = var.public_cloud ? null : "outscale"
+      bastion_port        = var.public_cloud ? null : 22
     }
   }
 
@@ -101,6 +111,14 @@ resource "outscale_vm" "control-planes" {
   tags {
     key   = "OscK8sNodeName"
     value = local.control_plane_names[count.index]
+  }
+
+  dynamic "tags" {
+    for_each = var.public_cloud ? [1] : []
+    content {
+      key   = "osc.fcu.eip.auto-attach"
+      value = outscale_public_ip.control-planes[count.index].public_ip
+    }
   }
 }
 

@@ -19,3 +19,7 @@ variable "bastion_iops" {}
 variable "cluster_name" {}
 variable "kubernetes_version" {}
 variable "will_install_ccm" {}
+variable "public_cloud" {
+  type    = bool
+  default = false
+}
