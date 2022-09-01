@@ -53,14 +53,6 @@ resource "outscale_security_group_rule" "control-plane-ssh" {
     ip_ranges       = var.public_cloud ? [for i in range(var.control_plane_count) : format("%s/32", outscale_public_ip.control-planes[i].public_ip)] : ["10.0.1.0/24"]
   }
 
-  # service node port range
-  rules {
-    from_port_range = "30000"
-    to_port_range   = "32767"
-    ip_protocol     = "tcp"
-    ip_ranges       = var.public_cloud ? ["0.0.0.0/0"] : ["10.0.0.0/16"]
-  }
-
   # kube-apiserver
   rules {
     from_port_range = "6443"
