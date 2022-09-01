@@ -63,3 +63,28 @@ resource "outscale_security_group" "node" {
     value = "True"
   }
 }
+
+
+resource "outscale_security_group_rule" "node" {
+  flow              = "Inbound"
+  security_group_id = outscale_security_group.node.id
+  # Authorize node port between nodes
+  rules {
+    from_port_range = "30000"
+    to_port_range   = "32767"
+    ip_protocol     = "tcp"
+    security_groups_members {
+      security_group_id = outscale_security_group.node.id
+    }
+  }
+  # Authorize node port from bastion to nodes
+  rules {
+    from_port_range = "30000"
+    to_port_range   = "32767"
+    ip_protocol     = "tcp"
+    security_groups_members {
+      security_group_id = outscale_security_group.bastion.id
+    }
+  }
+}
+
