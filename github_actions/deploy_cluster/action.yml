@@ -86,6 +86,10 @@ inputs:
     description: 'Create the cluster in the public or private cloud'
     required: false
     default: "false"
+  image_id:
+    description: 'Image ID used for all VMs'
+    required: false
+    default: "ami-a4e4e7ad"
 runs:
   using: "composite"
   steps:
@@ -117,7 +121,7 @@ runs:
       working-directory: ${{ inputs.repository_folder }}
       shell: bash
     - name: Terraform Apply
-      run: terraform apply -var "cluster_name=${{ env.cluster_name }}" -var "will_install_ccm=${{ inputs.will_install_ccm }}" -var "kubernetes_version=${{ inputs.kubernetes_version }}" -var "bastion_vm_type=${{ inputs.bastion_vm_type }}" -var "bastion_volume_type=${{ inputs.bastion_volume_type }}" -var "bastion_volume_size=${{ inputs.bastion_volume_size}}" -var "bastion_iops=${{ inputs.bastion_iops}}" -var "control_plane_vm_type=${{ inputs.control_plane_vm_type }}" -var "control_plane_count=${{ inputs.control_plane_count}}" -var "control_plane_volume_type=${{ inputs.control_plane_volume_type }}" -var "control_plane_volume_size=${{ inputs.control_plane_volume_size }}"  -var "control_plane_iops=${{ inputs.control_plane_iops }}" -var "worker_vm_type=${{ inputs.worker_vm_type }}" -var "worker_count=${{ inputs.worker_count }}" -var "worker_volume_type=${{ inputs.worker_volume_type }}" -var "worker_volume_size=${{ inputs.worker_volume_size }}" -var "worker_iops=${{ inputs.worker_iops }}" -var "public_cloud=${{ inputs.public_cloud }}" -auto-approve
+      run: terraform apply -var "cluster_name=${{ env.cluster_name }}" -var "will_install_ccm=${{ inputs.will_install_ccm }}" -var "kubernetes_version=${{ inputs.kubernetes_version }}" -var "bastion_vm_type=${{ inputs.bastion_vm_type }}" -var "bastion_volume_type=${{ inputs.bastion_volume_type }}" -var "bastion_volume_size=${{ inputs.bastion_volume_size}}" -var "bastion_iops=${{ inputs.bastion_iops}}" -var "control_plane_vm_type=${{ inputs.control_plane_vm_type }}" -var "control_plane_count=${{ inputs.control_plane_count}}" -var "control_plane_volume_type=${{ inputs.control_plane_volume_type }}" -var "control_plane_volume_size=${{ inputs.control_plane_volume_size }}"  -var "control_plane_iops=${{ inputs.control_plane_iops }}" -var "worker_vm_type=${{ inputs.worker_vm_type }}" -var "worker_count=${{ inputs.worker_count }}" -var "worker_volume_type=${{ inputs.worker_volume_type }}" -var "worker_volume_size=${{ inputs.worker_volume_size }}" -var "worker_iops=${{ inputs.worker_iops }}" -var "public_cloud=${{ inputs.public_cloud }}" -var "image_id=${{ inputs.image_id }}" -auto-approve
       env:    
         TF_VAR_access_key_id: ${{ inputs.osc_access_key }}
         TF_VAR_secret_key_id: ${{ inputs.osc_secret_key }}
