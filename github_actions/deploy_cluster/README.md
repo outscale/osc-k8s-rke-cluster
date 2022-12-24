@@ -14,8 +14,8 @@ See [action.yml](action.yml)
 | `will_install_ccm`          | Configure the cluster for future CCM installation ("true" or "false")                        | `false`  | `"false"`                               |
 | `public_cloud`              | Deploy the cluster in the public or private cloud ("true" for public or "false" for private) | `false`  | `"false"`                               |
 | `repository_folder`         | Folder where this repo is stored                                                             | `false`  | `"./"`                                  |
-| `rke_version`               | Version of rke to use                                                                        | `false`  | `"v1.3.4"`                              |
-| `kubernetes_version`        | Version of the kubernetes to deploy (See https://github.com/rancher/rke/releases)            | `false`  | `"v1.22.5-rancher1-1"`                  |
+| `rke_version`               | Version of rke to use                                                                        | `false`  | `"v1.4.1"`                              |
+| `kubernetes_version`        | Version of the kubernetes to deploy (See https://github.com/rancher/rke/releases)            | `false`  | `"v1.24.8-rancher1-1"`                  |
 | `bastion_vm_type`           | Vm type of bastion instance                                                                  | `false`  | `"tinav5.c4r8p1"`                       |
 | `bastion_volume_type`       | Volume type of bastion instance                                                              | `false`  | `"gp2"`                                 |
 | `bastion_volume_size`       | Volume size of bastion instance                                                              | `false`  | `15`                                    |
@@ -30,7 +30,7 @@ See [action.yml](action.yml)
 | `worker_volume_type`        | Volume type of worker instance                                                               | `false`  | `"standard"`                            |
 | `worker_volume_size`        | Volume size of worker instance                                                               | `false`  | `15`                                    |
 | `worker_volume_iops`        | Volume iops of worker instance                                                               | `false`  | `1500`                                  |
-| `image_id`                  | Image ID used for all VMs                                                                    | `false`  | `ami-37b14bc1` (available in eu-west-2) |
+| `image_id`                  | Image ID used for all VMs                                                                    | `false`  | `ami-d76e520a` (available in eu-west-2) |
 
 ## Output
 N/A
@@ -57,7 +57,7 @@ jobs:
         osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
         osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
         osc_region: ${{ secrets.OSC_REGION }}
-        kubernetes_version: "v1.22.7-rancher1-2"
+        kubernetes_version: "v1.24.8-rancher1-1"
         bastion_vm_type: "tinav5.c4r8p1"
         bastion_volume_type: "io1"
         bastion_volume_size: 30

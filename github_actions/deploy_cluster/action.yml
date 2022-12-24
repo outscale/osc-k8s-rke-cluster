@@ -21,11 +21,11 @@ inputs:
   rke_version:
     description: 'Version of rke to use'
     required: false
-    default: "v1.3.4"
+    default: "v1.4.1"
   kubernetes_version:
     description: 'Version of the kubernetes to deploy (See https://github.com/rancher/rke/releases)'
     required: false
-    default: "v1.22.5-rancher1-1"
+    default: "v1.24.8-rancher1-1"
   bastion_vm_type:
     description: 'Vm type of bastion instance'
     required: false
@@ -89,7 +89,7 @@ inputs:
   image_id:
     description: 'Image ID used for all VMs'
     required: false
-    default: "ami-37b14bc1"
+    default: "ami-d76e520a"
 runs:
   using: "composite"
   steps:
