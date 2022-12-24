@@ -37,5 +37,4 @@ kubectl delete -f https://raw.githubusercontent.com/kubernetes-csi/external-snap
 kubectl delete -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-6.1/deploy/kubernetes/snapshot-controller/rbac-snapshot-controller.yaml
 kubectl delete -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-6.1/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml
 ANSIBLE_CONFIG=ansible.cfg ansible-playbook addons/csi/playbook-destroy.yaml
-
 ```

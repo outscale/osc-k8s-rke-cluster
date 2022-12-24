@@ -15,7 +15,7 @@
     - name: download kubectl
       become: yes
       vars:
-        kubectl_version: "v1.21.6"
+        kubectl_version: "v1.24.8"
       get_url:
         url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
         dest: /usr/local/bin/kubectl
