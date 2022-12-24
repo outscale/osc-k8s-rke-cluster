@@ -2,7 +2,7 @@
 #secret_key_id       = "MySecretKey"
 #region              = "eu-west-2"
 
-image_id                  = "ami-37b14bc1" # Centos
+image_id                  = "ami-352ca9f1" # Centos
 control_plane_vm_type     = "tinav5.c4r8p1"
 control_plane_count       = 1
 control_plane_volume_type = "io1"
@@ -18,6 +18,6 @@ bastion_volume_type       = "io1"
 bastion_volume_size       = 15
 bastion_iops              = 1500
 cluster_name              = "phandalin"
-kubernetes_version        = "v1.22.5-rancher1-1" # See available version https://github.com/rancher/rke/releases
+kubernetes_version        = "v1.24.8-rancher1-1" # See available version https://github.com/rancher/rke/releases
 will_install_ccm          = false                # Set to true if the CCM of osc will be installed 
 public_cloud              = false
