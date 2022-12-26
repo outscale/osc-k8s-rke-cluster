@@ -106,7 +106,7 @@ runs:
       uses: hashicorp/setup-terraform@v1
     - name: Install rke
       run: |
-        wget https://github.com/rancher/rke/releases/download/${{ inputs.rke_version }}/rke_linux-amd64
+        wget -nv https://github.com/rancher/rke/releases/download/${{ inputs.rke_version }}/rke_linux-amd64
         chmod +x ./rke_linux-amd64
       working-directory: ${{ inputs.repository_folder }}
       shell: bash
