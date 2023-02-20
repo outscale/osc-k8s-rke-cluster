@@ -91,7 +91,7 @@ resource "outscale_vm" "control-planes" {
       delete_on_vm_deletion = true
       volume_size           = var.control_plane_volume_size
       volume_type           = var.control_plane_volume_type
-      iops                  = var.control_plane_volume_type == "io1" ? var.control_plane_iops : 0
+      iops                  = var.control_plane_volume_type == "io1" ? var.control_plane_iops : null
     }
   }
 

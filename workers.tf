@@ -67,7 +67,7 @@ resource "outscale_vm" "workers" {
       delete_on_vm_deletion = true
       volume_size           = var.worker_volume_size
       volume_type           = var.worker_volume_type
-      iops                  = var.worker_volume_type == "io1" ? var.worker_iops : 0
+      iops                  = var.worker_volume_type == "io1" ? var.worker_iops : null
     }
   }
 
