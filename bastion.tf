@@ -95,7 +95,7 @@ resource "outscale_vm" "bastion" {
       delete_on_vm_deletion = true
       volume_size           = var.bastion_volume_size
       volume_type           = var.bastion_volume_type
-      iops                  = var.bastion_volume_type == "io1" ? var.bastion_iops : 0
+      iops                  = var.bastion_volume_type == "io1" ? var.bastion_iops : null
     }
   }
 
