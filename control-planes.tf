@@ -105,20 +105,16 @@ resource "outscale_vm" "control-planes" {
     value = local.control_plane_names[count.index]
   }
 
+  tags {
+    key   = "OscK8sClusterID/${var.cluster_name}"
+    value = "owned"
+  }
+
   dynamic "tags" {
     for_each = var.public_cloud ? [1] : []
     content {
       key   = "osc.fcu.eip.auto-attach"
       value = outscale_public_ip.control-planes[count.index].public_ip
     }
-  }
-}
-
-resource "outscale_tag" "control-planes-k8s-cluster-name" {
-  count        = var.control_plane_count
-  resource_ids = [outscale_vm.control-planes[count.index].vm_id]
-  tag {
-    key   = "OscK8sClusterID/${var.cluster_name}"
-    value = "owned"
   }
 }

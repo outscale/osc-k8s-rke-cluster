@@ -95,22 +95,16 @@ resource "outscale_vm" "workers" {
     value = local.node_names[count.index]
   }
 
+  tags {
+    key   = "OscK8sClusterID/${var.cluster_name}"
+    value = "owned"
+  }
+
   dynamic "tags" {
     for_each = var.public_cloud ? [1] : []
     content {
       key   = "osc.fcu.eip.auto-attach"
       value = outscale_public_ip.workers[count.index].public_ip
     }
-  }
-}
-
-# A bug in metadata make cloud-init crash with a tag containing a / so we apply it after VM finished starting.
-# This tag is needed for CCM
-resource "outscale_tag" "workers-k8s-cluster-name" {
-  count        = var.worker_count
-  resource_ids = [outscale_vm.workers[count.index].vm_id]
-  tag {
-    key   = "OscK8sClusterID/${var.cluster_name}"
-    value = "owned"
   }
 }
