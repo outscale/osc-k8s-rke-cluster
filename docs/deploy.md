@@ -16,6 +16,8 @@ export TF_VAR_region="eu-west-2"
 
 By editing ['terraform.tfvars'](terraform.tfvars), you can adjust the number of worker/control-plane nodes, size of node and more.
 
+> :warning: You need to use an OMI with cloud-init at least 22.4
+
 # Deploying infrastructure
 
 This step will create infrastructure components as well as configuration files needed to bootstrap cluster creation.

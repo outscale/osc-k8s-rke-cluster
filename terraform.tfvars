@@ -2,7 +2,7 @@
 #secret_key_id       = "MySecretKey"
 #region              = "eu-west-2"
 
-image_id                  = "ami-352ca9f1" # Centos
+image_id                  = "ami-526949bc" # backup of Ubuntu 22.04 with cloud-init 22.4
 control_plane_vm_type     = "tinav5.c4r8p1"
 control_plane_count       = 1
 control_plane_volume_type = "io1"
