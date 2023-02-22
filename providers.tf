@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     outscale = {
-      source  = "outscale/outscale"
+      source = "outscale/outscale"
     }
     shell = {
       source  = "scottwinkler/shell"
