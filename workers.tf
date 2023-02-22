@@ -76,7 +76,7 @@ resource "outscale_vm" "workers" {
     connection {
       type                = "ssh"
       user                = "outscale"
-      host                = var.public_cloud ? outscale_public_ip.workers[count.index].public_ip : format("10.0.1.%d", 19 + count.index)
+      host                = var.public_cloud ? self.public_ip : format("10.0.1.%d", 19 + count.index)
       private_key         = tls_private_key.workers[count.index].private_key_pem
       bastion_host        = var.public_cloud ? null : outscale_public_ip.bastion.public_ip
       bastion_private_key = var.public_cloud ? null : tls_private_key.bastion.private_key_pem
