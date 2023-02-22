@@ -76,7 +76,7 @@ resource "outscale_vm" "control-planes" {
     connection {
       type                = "ssh"
       user                = "outscale"
-      host                = var.public_cloud ? outscale_public_ip.control-planes[count.index].public_ip : format("10.0.1.%d", 10 + count.index)
+      host                = var.public_cloud ? self.public_ip : format("10.0.1.%d", 10 + count.index)
       private_key         = tls_private_key.control-planes[count.index].private_key_pem
       bastion_host        = var.public_cloud ? null : outscale_public_ip.bastion.public_ip
       bastion_private_key = var.public_cloud ? null : tls_private_key.bastion.private_key_pem
