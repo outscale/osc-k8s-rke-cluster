@@ -1,3 +1,20 @@
+
+# http data source don't manage binary data
+resource "null_resource" "rke_binary" {
+  triggers = {
+    on_version_change = "${var.rke_version}"
+  }
+
+  provisioner "local-exec" {
+    command = "mkdir -p ${path.root}/rke/ && curl -L -o ${path.root}/rke/rke https://github.com/rancher/rke/releases/download/${var.rke_version}/rke_linux-amd64 && chmod +x ${path.root}/rke/rke"
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "rm ${path.root}/rke/rke"
+  }
+}
+
 resource "local_file" "rke_cluster_yml" {
   filename        = "${path.root}/rke/cluster.yml"
   file_permission = "0660"

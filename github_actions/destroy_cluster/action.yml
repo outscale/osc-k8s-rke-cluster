@@ -18,7 +18,7 @@ runs:
   using: "composite"
   steps:
     - name: Shutdown the cluster  
-      run: ./rke_linux-amd64 remove --config rke/cluster.yml --force
+      run: ./rke/rke remove --config rke/cluster.yml --force
       working-directory: ${{ inputs.repository_folder }}
       shell: bash
     - name: Terraform Destroy

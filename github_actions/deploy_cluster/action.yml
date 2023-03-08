@@ -21,11 +21,11 @@ inputs:
   rke_version:
     description: 'Version of rke to use'
     required: false
-    default: "v1.4.1"
+    default: "v1.4.3"
   kubernetes_version:
     description: 'Version of the kubernetes to deploy (See https://github.com/rancher/rke/releases)'
     required: false
-    default: "v1.24.8-rancher1-1"
+    default: "v1.24.10-rancher4-1"
   bastion_vm_type:
     description: 'Vm type of bastion instance'
     required: false
@@ -104,12 +104,6 @@ runs:
       shell: bash
     - name: Setup Terraform  
       uses: hashicorp/setup-terraform@v1
-    - name: Install rke
-      run: |
-        wget -nv https://github.com/rancher/rke/releases/download/${{ inputs.rke_version }}/rke_linux-amd64
-        chmod +x ./rke_linux-amd64
-      working-directory: ${{ inputs.repository_folder }}
-      shell: bash
     - name: Terraform Init
       id: init
       run: terraform init
@@ -121,7 +115,7 @@ runs:
       working-directory: ${{ inputs.repository_folder }}
       shell: bash
     - name: Terraform Apply
-      run: terraform apply -var "cluster_name=${{ env.cluster_name }}" -var "will_install_ccm=${{ inputs.will_install_ccm }}" -var "kubernetes_version=${{ inputs.kubernetes_version }}" -var "bastion_vm_type=${{ inputs.bastion_vm_type }}" -var "bastion_volume_type=${{ inputs.bastion_volume_type }}" -var "bastion_volume_size=${{ inputs.bastion_volume_size}}" -var "bastion_iops=${{ inputs.bastion_iops}}" -var "control_plane_vm_type=${{ inputs.control_plane_vm_type }}" -var "control_plane_count=${{ inputs.control_plane_count}}" -var "control_plane_volume_type=${{ inputs.control_plane_volume_type }}" -var "control_plane_volume_size=${{ inputs.control_plane_volume_size }}"  -var "control_plane_iops=${{ inputs.control_plane_iops }}" -var "worker_vm_type=${{ inputs.worker_vm_type }}" -var "worker_count=${{ inputs.worker_count }}" -var "worker_volume_type=${{ inputs.worker_volume_type }}" -var "worker_volume_size=${{ inputs.worker_volume_size }}" -var "worker_iops=${{ inputs.worker_iops }}" -var "public_cloud=${{ inputs.public_cloud }}" -var "image_id=${{ inputs.image_id }}" -auto-approve
+      run: terraform apply -var "cluster_name=${{ env.cluster_name }}" -var "will_install_ccm=${{ inputs.will_install_ccm }}" -var "rke_version=${{ inputs.rke_version }}" -var "kubernetes_version=${{ inputs.kubernetes_version }}" -var "bastion_vm_type=${{ inputs.bastion_vm_type }}" -var "bastion_volume_type=${{ inputs.bastion_volume_type }}" -var "bastion_volume_size=${{ inputs.bastion_volume_size}}" -var "bastion_iops=${{ inputs.bastion_iops}}" -var "control_plane_vm_type=${{ inputs.control_plane_vm_type }}" -var "control_plane_count=${{ inputs.control_plane_count}}" -var "control_plane_volume_type=${{ inputs.control_plane_volume_type }}" -var "control_plane_volume_size=${{ inputs.control_plane_volume_size }}"  -var "control_plane_iops=${{ inputs.control_plane_iops }}" -var "worker_vm_type=${{ inputs.worker_vm_type }}" -var "worker_count=${{ inputs.worker_count }}" -var "worker_volume_type=${{ inputs.worker_volume_type }}" -var "worker_volume_size=${{ inputs.worker_volume_size }}" -var "worker_iops=${{ inputs.worker_iops }}" -var "public_cloud=${{ inputs.public_cloud }}" -var "image_id=${{ inputs.image_id }}" -auto-approve
       env:    
         TF_VAR_access_key_id: ${{ inputs.osc_access_key }}
         TF_VAR_secret_key_id: ${{ inputs.osc_secret_key }}
@@ -130,7 +124,7 @@ runs:
       shell: bash
     - name: Set up the cluster
       run: |
-        ./rke_linux-amd64 up --config rke/cluster.yml
+        ./rke/rke up --config rke/cluster.yml
         /bin/bash -c 'sed -i "s|server:.*$|server: \"$(cat kube-apiserver-url.txt):6443\"|" rke/kube_config_cluster.yml'
       working-directory: ${{ inputs.repository_folder }}
       shell: bash
