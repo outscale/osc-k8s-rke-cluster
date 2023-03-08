@@ -29,7 +29,7 @@ terraform apply
 
 Once your infrastructure ready, you are ready to deploy your cluster using RKE:
 ```
-rke up --config rke/cluster.yml
+./rke/rke up --config rke/cluster.yml
 sed -i "s|server:.*$|server: \"$(cat kube-apiserver-url.txt):6443\"|" rke/kube_config_cluster.yml
 ```
 
