@@ -103,7 +103,7 @@ runs:
       run: echo cluster_name=cluster$(date +%s) >> $GITHUB_ENV
       shell: bash
     - name: Setup Terraform  
-      uses: hashicorp/setup-terraform@v1
+      uses: hashicorp/setup-terraform@v2
     - name: Terraform Init
       id: init
       run: terraform init
