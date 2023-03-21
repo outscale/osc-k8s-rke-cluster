@@ -3,7 +3,7 @@ on:
   push:
     branches:    
       - 'master'
-  pull_request_target:
+  pull_request:
     branches: [ master ]
   workflow_dispatch:
     
@@ -18,7 +18,6 @@ jobs:
       id: fmt
       run: terraform fmt -check
   deploy_private_cloud:
-    environment: test_e2e
     runs-on: [self-hosted, linux]
     needs: code-quality
     steps:
@@ -48,7 +47,6 @@ jobs:
         osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
         osc_region: ${{ secrets.OSC_REGION }}
   deploy_public_cloud:
-    environment: test_e2e
     runs-on: [self-hosted, linux]
     needs: [code-quality, deploy_private_cloud]
     steps:
