@@ -21,5 +21,5 @@ bastion_iops              = 1500
 cluster_name              = "phandalin"
 rke_version               = "v1.4.4"
 kubernetes_version        = "v1.25.6-rancher4-1" # See available version https://github.com/rancher/rke/releases
-will_install_ccm          = false                 # Set to true if the CCM of osc will be installed
+will_install_ccm          = false                # Set to true if the CCM of osc will be installed
 public_cloud              = false
