@@ -21,11 +21,11 @@ inputs:
   rke_version:
     description: 'Version of rke to use'
     required: false
-    default: "v1.4.3"
+    default: "v1.4.4"
   kubernetes_version:
     description: 'Version of the kubernetes to deploy (See https://github.com/rancher/rke/releases)'
     required: false
-    default: "v1.24.10-rancher4-1"
+    default: "v1.25.6-rancher4-1"
   bastion_vm_type:
     description: 'Vm type of bastion instance'
     required: false
