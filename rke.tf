@@ -81,7 +81,6 @@ services:
   kube-api:
     image:
     extra_args:
-      feature-gates: CSIVolumeFSGroupPolicy=true
     extra_binds: []
     extra_env: []
     win_extra_args: {}
@@ -116,7 +115,6 @@ services:
   kubelet:
     image:
     extra_args:
-      feature-gates: CSIVolumeFSGroupPolicy=true
       read-only-port: 10255
     extra_binds: []
     extra_env: []
