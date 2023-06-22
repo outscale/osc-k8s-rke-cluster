@@ -18,10 +18,21 @@ ANSIBLE_CONFIG=ansible.cfg ansible-playbook addons/csi/playbook.yaml
 
 # CSI Quick Test
 
-You can use a simple dynamic provisioning:
+You can first check that CSI pods are deployed and running:
+```
+$ kubectl get pods -n kube-system | grep osc-csi-
+osc-csi-controller-7f8c5cb85f-dbzhw        6/6     Running     0          86s
+osc-csi-controller-7f8c5cb85f-szrc5        6/6     Running     0          86s
+osc-csi-node-4rvhg                         3/3     Running     0          86s
+osc-csi-node-c79mf                         3/3     Running     0          86s
+osc-csi-node-dgx92                         3/3     Running     0          86s
+```
+
+Then you can use a simple dynamic provisioning:
 ```
 kubectl apply -f addons/csi/dynamic.yaml
 kubectl describe pv -n dynamic-p
+kubectl get pods -n dynamic-p
 ```
 
 Note that creation of volume may take time.
