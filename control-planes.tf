@@ -8,6 +8,12 @@ resource "tls_private_key" "control-planes" {
   rsa_bits  = "4096"
 }
 
+resource "tls_private_key" "control-planes-sshd" {
+  count     = var.control_plane_count
+  algorithm = "RSA"
+  rsa_bits  = "4096"
+}
+
 resource "local_file" "control-planes-pem" {
   count           = var.control_plane_count
   filename        = "${path.module}/control-planes/control-plane-${count.index}.pem"
@@ -70,7 +76,9 @@ resource "outscale_vm" "control-planes" {
   security_group_ids = [outscale_security_group.control-plane.security_group_id, outscale_security_group.node.security_group_id, outscale_security_group.worker.security_group_id]
   subnet_id          = var.public_cloud ? null : outscale_subnet.nodes[0].subnet_id
   private_ips        = var.public_cloud ? null : [format("10.0.1.%d", 10 + count.index)]
-
+  user_data = base64encode(format("#cloud-config\nssh:\n  emit_keys_to_console: false\nssh_keys:\n  rsa_private: |\n    %s\n  rsa_public: %s",
+    indent(4, tls_private_key.control-planes-sshd[count.index].private_key_pem),
+  replace(tls_private_key.control-planes-sshd[count.index].public_key_openssh, "\n", "")))
   provisioner "remote-exec" {
     inline = ["echo ok"]
     connection {

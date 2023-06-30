@@ -55,6 +55,11 @@ resource "tls_private_key" "bastion" {
   rsa_bits  = "4096"
 }
 
+resource "tls_private_key" "bastion-sshd" {
+  algorithm = "RSA"
+  rsa_bits  = "4096"
+}
+
 resource "local_file" "bastion-pem" {
   filename        = "${path.module}/bastion/bastion.pem"
   content         = tls_private_key.bastion.private_key_pem
@@ -88,6 +93,9 @@ resource "outscale_vm" "bastion" {
   security_group_ids = [outscale_security_group.bastion.security_group_id]
   subnet_id          = var.public_cloud ? null : outscale_subnet.bastion[0].subnet_id
   private_ips        = var.public_cloud ? null : ["10.0.0.10"]
+  user_data = base64encode(format("#cloud-config\nssh:\n  emit_keys_to_console: false\nssh_keys:\n  rsa_private: |\n    %s\n  rsa_public: %s",
+    indent(4, tls_private_key.bastion-sshd.private_key_pem),
+  replace(tls_private_key.bastion-sshd.public_key_openssh, "\n", "")))
 
   block_device_mappings {
     device_name = "/dev/sda1"
