@@ -14,7 +14,7 @@ export TF_VAR_region="eu-west-2"
 
 By editing ['terraform.tfvars'](terraform.tfvars), you can adjust the number of worker/control-plane nodes, size of node and more.
 
-Make sure that `image_id` corresponds to an recent Ubuntu image for your region. You can get the latest image id on [Outscale's documentation](https://docs.outscale.com/en/userguide/Official-OMIs-Reference.html).
+WARNING: Make sure that `image_id` corresponds to an recent Ubuntu image for your region. You can get the latest image id on [Outscale's documentation](https://docs.outscale.com/en/userguide/Official-OMIs-Reference.html).
 
 # Deploying infrastructure
 
