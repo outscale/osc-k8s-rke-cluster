@@ -30,7 +30,7 @@ See [action.yml](action.yml)
 | `worker_volume_type`        | Volume type of worker instance                                                               | `false`  | `"standard"`                            |
 | `worker_volume_size`        | Volume size of worker instance                                                               | `false`  | `15`                                    |
 | `worker_volume_iops`        | Volume iops of worker instance                                                               | `false`  | `1500`                                  |
-| `image_id`                  | Image ID used for all VMs                                                                    | `false`  | `ami-d76e520a` (available in eu-west-2) |
+| `image_id`                  | Image ID used for all VMs                                                                    | `false`  | `ami-9b41b457` (available in us-east-2) |
 
 ## Output
 N/A

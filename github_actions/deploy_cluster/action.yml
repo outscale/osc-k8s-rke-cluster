@@ -89,7 +89,7 @@ inputs:
   image_id:
     description: 'Image ID used for all VMs'
     required: false
-    default: "ami-d76e520a"
+    default: "ami-9b41b457"
 runs:
   using: "composite"
   steps:
