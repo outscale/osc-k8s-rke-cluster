@@ -149,7 +149,7 @@ ${var.public_cloud ? "" : join("\n", [for i in range(var.control_plane_count) : 
   webhook: null
 addons:
 addons_include:
-ssh_key_path: ~/.ssh/id_rsa
+ssh_key_path: ~/.ssh/id_ed25519
 ssh_cert_path:
 ssh_agent_auth: false
 authorization:
