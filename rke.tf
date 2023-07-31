@@ -38,7 +38,7 @@ resource "local_file" "rke_cluster_yml" {
   labels: {}
   taints: []
 EOT
-    , var.public_cloud ? outscale_vm.control-planes[i].public_ip : outscale_vm.control-planes[i].private_ip, outscale_vm.control-planes[i].private_dns_name, i)]),
+    , var.public_cloud ? outscale_public_ip.control-planes[i].public_ip : outscale_vm.control-planes[i].private_ip, outscale_vm.control-planes[i].private_dns_name, i)]),
     join("\n", [for i in range(var.worker_count) : format(
       <<EOT
 - address: %s
@@ -55,7 +55,7 @@ EOT
   labels: {}
   taints: []
 EOT
-    , var.public_cloud ? outscale_vm.workers[i].public_ip : outscale_vm.workers[i].private_ip, outscale_vm.workers[i].private_dns_name, i)]),
+    , var.public_cloud ? outscale_public_ip.workers[i].public_ip : outscale_vm.workers[i].private_ip, outscale_vm.workers[i].private_dns_name, i)]),
 
     <<EOT
 services:
