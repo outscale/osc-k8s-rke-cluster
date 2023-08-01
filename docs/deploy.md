@@ -2,7 +2,7 @@
 
 - [Terraform](https://www.terraform.io/downloads) (>= 0.14)
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html) (>= 2.4)
-- [Outscale Access Key and Secret Key](https://wiki.outscale.net/display/EN/Creating+an+Access+Key)
+- [Outscale Access Key and Secret Key](https://docs.outscale.com/en/userguide/Creating-an-Access-Key.html)
 
 # Configuration
 
