@@ -13,7 +13,7 @@
   tasks:
     - name: download helm
       command: 
-        cmd: /bin/bash -c "mkdir -p ./helm/bin && wget https://get.helm.sh/helm-v3.10.3-linux-amd64.tar.gz && tar -zxvf helm-v3.10.3-linux-amd64.tar.gz && rm -r helm-v3.10.3-linux-amd64.tar.gz && mv linux-amd64/helm $HELM_BIN && chmod +x $HELM_BIN && rm -r linux-amd64"
+        cmd: /bin/bash -c "mkdir -p ./helm/bin && wget https://get.helm.sh/helm-v3.16.1-linux-amd64.tar.gz && tar -zxvf helm-v3.16.1-linux-amd64.tar.gz && rm -r helm-v3.16.1-linux-amd64.tar.gz && mv linux-amd64/helm $HELM_BIN && chmod +x $HELM_BIN && rm -r linux-amd64"
         creates: $HELM_BIN
     - name: Add twun helm repo
       command:
