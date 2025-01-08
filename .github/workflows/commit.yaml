@@ -1,8 +1,5 @@
 name: Commit Tests
 on:
-  push:
-    branches:    
-      - 'master'
   pull_request:
     branches: [ master ]
   workflow_dispatch:
@@ -11,9 +8,12 @@ jobs:
   code-quality:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Setup Terraform  
-      uses: hashicorp/setup-terraform@v1
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.9.8
+        terraform_wrapper: false
     - name: Terraform Format
       id: fmt
       run: terraform fmt -check
@@ -21,11 +21,8 @@ jobs:
     runs-on: [self-hosted, linux]
     needs: code-quality
     steps:
-    - uses: actions/checkout@v2
-      with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
-    - uses: outscale-dev/frieza-github-actions/frieza-clean@master
+    - uses: actions/checkout@v4
+    - uses: outscale/frieza-github-actions/frieza-clean@master
       with:
         access_key: ${{ secrets.OSC_ACCESS_KEY }}
         secret_key: ${{ secrets.OSC_SECRET_KEY }}
@@ -50,11 +47,8 @@ jobs:
     runs-on: [self-hosted, linux]
     needs: [code-quality, deploy_private_cloud]
     steps:
-    - uses: actions/checkout@v2
-      with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
-    - uses: outscale-dev/frieza-github-actions/frieza-clean@master
+    - uses: actions/checkout@v4
+    - uses: outscale/frieza-github-actions/frieza-clean@master
       with:
         access_key: ${{ secrets.OSC_ACCESS_KEY }}
         secret_key: ${{ secrets.OSC_SECRET_KEY }}
