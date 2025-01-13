@@ -7,7 +7,7 @@ Here, we show how to install Outscale CCM for this specific cluster.
 ```
 export KUBECONFIG=rke/kube_config_cluster.yml
 kubectl apply -f addons/ccm/secrets.yaml
-kubectl apply -f https://raw.githubusercontent.com/outscale/cloud-provider-osc/v0.2.0/deploy/osc-ccm-manifest.yml
+kubectl apply -f https://raw.githubusercontent.com/outscale/cloud-provider-osc/v0.2.7/deploy/osc-ccm-manifest.yml
 ```
 
 # CCM Quick Test
@@ -30,6 +30,6 @@ Also note that the load balancer may take time to expose the service.
 # Uninstall CCM
 
 ```
-kubectl delete -f https://raw.githubusercontent.com/outscale/cloud-provider-osc/v0.2.0/deploy/osc-ccm-manifest.yml
+kubectl delete -f https://raw.githubusercontent.com/outscale/cloud-provider-osc/v0.2.7/deploy/osc-ccm-manifest.yml
 kubectl delete -f addons/ccm/secrets.yaml
 ```
