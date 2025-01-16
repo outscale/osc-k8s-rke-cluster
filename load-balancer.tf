@@ -36,9 +36,8 @@ resource "local_file" "kube-apiserver-url" {
 }
 
 resource "outscale_load_balancer_vms" "backend_vms" {
-  count              = var.control_plane_count
   load_balancer_name = outscale_load_balancer.lb-kube-apiserver.load_balancer_name
-  backend_vm_ids     = [outscale_vm.control-planes[count.index].vm_id]
+  backend_vm_ids     = [for _, vm in outscale_vm.control-planes : vm.vm_id]
 }
 
 resource "outscale_load_balancer_attributes" "lb-kube-apiserver" {
