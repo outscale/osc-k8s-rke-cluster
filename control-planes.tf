@@ -67,6 +67,9 @@ resource "outscale_security_group_rule" "control-plane-ssh" {
 }
 
 resource "outscale_vm" "control-planes" {
+  timeouts {
+    create = "15m"
+  }
   count              = var.control_plane_count
   image_id           = outscale_image.node.image_id
   vm_type            = var.control_plane_vm_type

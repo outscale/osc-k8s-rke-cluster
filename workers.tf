@@ -57,6 +57,9 @@ resource "outscale_security_group_rule" "worker-rules" {
 }
 
 resource "outscale_vm" "workers" {
+  timeouts {
+    create = "15m"
+  }
   count              = var.worker_count
   image_id           = outscale_image.node.image_id
   vm_type            = var.worker_vm_type
