@@ -18,7 +18,7 @@ jobs:
       id: fmt
       run: terraform fmt -check
   deploy_private_cloud:
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, us-east-2]
     needs: code-quality
     steps:
     - uses: actions/checkout@v4
@@ -44,7 +44,7 @@ jobs:
         osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
         osc_region: ${{ secrets.OSC_REGION }}
   deploy_public_cloud:
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, us-east-2]
     needs: [code-quality, deploy_private_cloud]
     steps:
     - uses: actions/checkout@v4
