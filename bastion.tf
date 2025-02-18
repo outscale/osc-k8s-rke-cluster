@@ -86,7 +86,7 @@ resource "outscale_security_group_rule" "bastion-ssh" {
 
 resource "outscale_vm" "bastion" {
   timeouts {
-    create = "15m"
+    create = "20m"
   }
   image_id           = var.image_id
   vm_type            = var.bastion_vm_type
