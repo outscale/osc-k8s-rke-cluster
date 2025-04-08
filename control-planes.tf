@@ -20,8 +20,9 @@ resource "local_file" "control-planes-pem" {
 }
 
 resource "outscale_keypair" "control-planes" {
-  count      = var.control_plane_count
-  public_key = tls_private_key.control-planes[count.index].public_key_openssh
+  count        = var.control_plane_count
+  keypair_name = "${var.cluster_name}-control-plane-${count.index}"
+  public_key   = tls_private_key.control-planes[count.index].public_key_openssh
 }
 
 resource "outscale_public_ip" "control-planes" {

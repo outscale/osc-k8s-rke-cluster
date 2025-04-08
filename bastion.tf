@@ -65,7 +65,8 @@ resource "local_file" "bastion-pem" {
 }
 
 resource "outscale_keypair" "bastion" {
-  public_key = tls_private_key.bastion.public_key_openssh
+  keypair_name = "${var.cluster_name}-bastion"
+  public_key   = tls_private_key.bastion.public_key_openssh
 }
 
 resource "outscale_security_group" "bastion" {

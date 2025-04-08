@@ -21,8 +21,9 @@ resource "local_file" "workers-pem" {
 }
 
 resource "outscale_keypair" "workers" {
-  count      = var.worker_count
-  public_key = tls_private_key.workers[count.index].public_key_openssh
+  count        = var.worker_count
+  keypair_name = "${var.cluster_name}-worker-${count.index}"
+  public_key   = tls_private_key.workers[count.index].public_key_openssh
 }
 
 resource "outscale_security_group" "worker" {
